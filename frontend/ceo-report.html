@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CEO Report — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .report-paper {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      max-width: 860px; margin: 0 auto; box-shadow: var(--shadow-md); overflow: hidden;
+    }
+    .report-masthead {
+      background: linear-gradient(135deg, var(--navy), #12305B); color: white; padding: 32px 40px;
+    }
+    .report-masthead .report-week { color: var(--gold); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+    .report-masthead h1 { color: white; font-size: 1.5rem; margin-top: 6px; }
+    .report-body { padding: 32px 40px; }
+    .report-section { margin-bottom: 28px; }
+    .report-section h3 {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-secondary); margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .exec-summary { font-size: 1rem; line-height: 1.8; color: var(--text-primary); }
+    .rev-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media (max-width: 640px) { .rev-row { grid-template-columns: repeat(2, 1fr); } }
+    .rev-cell { background: var(--bg); border-radius: 10px; padding: 16px; text-align: center; }
+    .rev-cell .v { font-size: 1.25rem; font-weight: 700; }
+    .rev-cell .l { font-size: 0.75rem; color: var(--text-secondary); }
+    .action-list { list-style: none; counter-reset: act; }
+    .action-list li {
+      counter-increment: act; padding: 12px 0 12px 44px; position: relative;
+      border-bottom: 1px solid var(--border-light); font-size: 0.9rem; line-height: 1.6;
+    }
+    body[dir="rtl"] .action-list li { padding: 12px 44px 12px 0; }
+    .action-list li::before {
+      content: counter(act); position: absolute; left: 0; top: 12px;
+      width: 28px; height: 28px; border-radius: 50%; background: var(--teal); color: white;
+      display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;
+    }
+    body[dir="rtl"] .action-list li::before { left: auto; right: 0; }
+    .alert-item { padding: 10px 14px; background: var(--warning-bg); border-radius: 8px; margin-bottom: 8px; font-size: 0.875rem; }
+    @media print {
+      .sidebar, .top-header, .report-actions, .sidebar-overlay { display: none !important; }
+      .main-content { margin: 0 !important; }
+      .page-content { padding: 0; }
+      .report-paper { box-shadow: none; border: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-icon">PQ</div>
+        <div>
+          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
+          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
+          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
+          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
+          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
+          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
+          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
+          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
+        </div>
+      </nav>
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="hamburger">☰</button>
+          <div>
+            <div class="header-title" data-i18n="report.title">Weekly CEO Report</div>
+            <div class="header-breadcrumb" data-i18n="report.subtitle">What changed, what matters, what to do.</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="report-actions flex gap-2 wrap mb-3" style="justify-content:center">
+          <button class="btn btn-outline" onclick="window.print()">🖨️ <span data-i18n="btn.print">Print</span></button>
+        </div>
+
+        <div class="report-paper" id="reportPaper">
+          <div class="report-masthead">
+            <div class="report-week" id="reportWeek">—</div>
+            <h1><span data-i18n="app.name">ProductIQ</span> · <span data-i18n="report.title">Weekly CEO Report</span></h1>
+          </div>
+          <div class="report-body" id="reportBody">
+            <div class="empty-state"><div class="empty-icon">📋</div></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    App.initSidebar('report');
+
+    async function renderReport() {
+      App.showLoading(true);
+      const r = await Api.getCeoReport(I18n.lang);
+      App.showLoading(false);
+      const ar = I18n.lang === 'ar';
+      document.getElementById('reportWeek').textContent = ar ? r.week_ar : r.week;
+
+      const revChange = App.pct(r.revenue.change_pct);
+      const profitChange = App.pct(r.revenue.profit_change_pct);
+
+      let html = `
+        <div class="report-section">
+          <h3>${I18n.t('report.section.summary')}</h3>
+          <p class="exec-summary">${ar ? r.summary_ar : r.summary_en}</p>
+        </div>
+
+        <div class="report-section">
+          <h3>${I18n.t('report.section.revenue')}</h3>
+          <div class="rev-row">
+            <div class="rev-cell"><div class="v">${App.egp(r.revenue.this_week)}</div><div class="l">${ar ? 'هذا الأسبوع' : 'This week'}</div></div>
+            <div class="rev-cell"><div class="v">${App.egp(r.revenue.last_week)}</div><div class="l">${ar ? 'الأسبوع الماضي' : 'Last week'}</div></div>
+            <div class="rev-cell"><div class="v" style="color:var(--success)">${revChange}</div><div class="l">${ar ? 'نمو الإيرادات' : 'Revenue growth'}</div></div>
+            <div class="rev-cell"><div class="v">${App.egp(r.revenue.profit)}</div><div class="l">${ar ? 'الربح' : 'Profit'} (${profitChange})</div></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="report-section">
+            <h3>${I18n.t('report.section.top')}</h3>
+            ${r.top_products.map(p => `
+              <div class="flex-between" style="padding:10px 0;border-bottom:1px solid var(--border-light);font-size:0.875rem">
+                <strong>${ar ? p.name_ar : p.name}</strong>
+                <span>${App.egp(p.revenue)} · ${p.units} ${I18n.t('common.units')}</span>
+              </div>`).join('')}
+          </div>
+          <div class="report-section">
+            <h3>${I18n.t('report.section.bottom')}</h3>
+            ${r.needs_attention.map(p => `
+              <div class="alert-item"><strong>${ar ? p.name_ar : p.name}</strong> — ${ar ? p.issue_ar : p.issue_en}</div>`).join('')}
+          </div>
+        </div>
+
+        <div class="report-section">
+          <h3>${I18n.t('report.section.actions')}</h3>
+          <ol class="action-list">
+            ${(ar ? r.action_items_ar : r.action_items_en).map(a => `<li>${a}</li>`).join('')}
+          </ol>
+        </div>
+
+        <div class="report-section" style="margin-bottom:0">
+          <h3>${I18n.t('report.section.suppliers')}</h3>
+          ${(ar ? r.supplier_alerts_ar : r.supplier_alerts_en).map(s => `<div class="alert-item">📦 ${s}</div>`).join('')}
+        </div>`;
+      document.getElementById('reportBody').innerHTML = html;
+    }
+
+    document.addEventListener('langchange', renderReport);
+    renderReport();
+  </script>
+</body>
+</html>

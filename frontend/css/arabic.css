@@ -1,0 +1,48 @@
+body[dir="rtl"] {
+  font-family: var(--font-ar);
+}
+
+body[dir="rtl"] .sidebar,
+body[dir="rtl"] .main-content,
+body[dir="rtl"] .top-header,
+body[dir="rtl"] .page-content { direction: rtl; }
+
+body[dir="rtl"] .nav-item { text-align: right; }
+body[dir="rtl"] .nav-icon { margin-left: 12px; margin-right: 0; }
+
+body[dir="rtl"] input,
+body[dir="rtl"] select,
+body[dir="rtl"] textarea { direction: rtl; }
+
+body[dir="rtl"] .stat-card,
+body[dir="rtl"] .card { direction: rtl; }
+
+body[dir="rtl"] table th,
+body[dir="rtl"] table td { text-align: right; }
+
+body[dir="rtl"] .lang-btn {
+  font-family: var(--font-ar);
+}
+
+body[dir="rtl"] .btn { font-family: var(--font-ar); }
+
+body[dir="rtl"] .badge { font-family: var(--font-ar); }
+
+body[dir="rtl"] .upload-zone { direction: rtl; }
+
+body[dir="rtl"] .dna-dimension { direction: rtl; }
+
+body[dir="rtl"] .report-card { direction: rtl; }
+body[dir="rtl"] .report-card .report-section h3 { font-family: var(--font-ar); }
+
+body[dir="rtl"] .simulator-input { direction: rtl; }
+
+body[dir="rtl"] .header-breadcrumb { font-family: var(--font-ar); }
+
+body[dir="rtl"] .empty-state { direction: rtl; }
+
+body[dir="rtl"] .confidence-meter { direction: rtl; }
+body[dir="rtl"] .assumptions-box { direction: rtl; }
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');

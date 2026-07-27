@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What-If Simulator — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-icon">PQ</div>
+        <div>
+          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
+          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
+          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
+          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
+          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
+          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
+          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
+          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
+        </div>
+      </nav>
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="hamburger">☰</button>
+          <div>
+            <div class="header-title" data-i18n="sim.title">What-If Simulator</div>
+            <div class="header-breadcrumb" data-i18n="sim.subtitle">Test a decision before you make it.</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- Input -->
+        <div class="simulator-input">
+          <div class="param-row">
+            <div class="param-field">
+              <label data-i18n="sim.param.product">Product</label>
+              <select id="simProduct"></select>
+            </div>
+            <div class="param-field">
+              <label data-i18n="sim.param.change">Change type</label>
+              <select id="simChange">
+                <option value="price decrease" data-i18n="sim.change.priceDecrease">Price decrease</option>
+                <option value="price increase" data-i18n="sim.change.priceIncrease">Price increase</option>
+                <option value="discount campaign" data-i18n="sim.change.discount">Discount campaign</option>
+                <option value="bundle with bestseller" data-i18n="sim.change.bundle">Bundle with bestseller</option>
+              </select>
+            </div>
+            <div class="param-field" style="max-width:160px">
+              <label data-i18n="sim.param.value">Change value (%)</label>
+              <input type="number" id="simValue" value="10" min="1" max="50">
+            </div>
+            <div>
+              <button class="btn btn-primary" id="simBtn">🔮 <span data-i18n="btn.simulate">Simulate</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div id="simResults" style="display:none">
+          <h3 class="mb-2" data-i18n="sim.results.title">Simulation Results</h3>
+          <div class="comparison-view mb-3">
+            <div class="comparison-card before">
+              <div class="comp-header"><h4 data-i18n="sim.results.before">Current</h4></div>
+              <div class="comp-value" id="curPrice">—</div>
+              <div style="font-size:0.8125rem;color:var(--text-secondary)" id="curMeta">—</div>
+            </div>
+            <div class="comparison-card after">
+              <div class="comp-header"><h4 data-i18n="sim.results.after">Projected</h4></div>
+              <div class="comp-value" id="newPrice" style="color:var(--teal)">—</div>
+              <div style="font-size:0.8125rem;color:var(--text-secondary)" id="newMeta">—</div>
+            </div>
+          </div>
+
+          <div class="grid-3 mb-3" id="impactGrid"></div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="flex-between mb-2">
+                <h4 style="font-size:0.875rem" data-i18n="sim.results.risk">Risk Level</h4>
+                <span id="riskBadge"></span>
+              </div>
+              <div class="confidence-meter">
+                <span class="meter-label" data-i18n="common.confidence">Confidence</span>
+                <div class="meter-bar"><div class="meter-fill" id="confFill" style="width:0%"></div></div>
+                <strong id="confVal">—</strong>
+              </div>
+              <div class="assumptions-box">
+                <strong data-i18n="sim.assumptions">Assumptions</strong>
+                <ul id="assumptionsList" style="padding-inline-start:18px"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    App.initSidebar('simulator');
+    let products = [];
+    const ar = () => I18n.lang === 'ar';
+
+    async function loadProducts() {
+      products = await Api.getProductList();
+      document.getElementById('simProduct').innerHTML = products.map(p =>
+        `<option value="${p.id}">${ar() && p.name_ar ? p.name_ar : p.name}</option>`).join('');
+    }
+
+    document.getElementById('simBtn').addEventListener('click', async () => {
+      const pid = document.getElementById('simProduct').value;
+      const p = products.find(x => x.id === pid);
+      const payload = {
+        product_id: pid,
+        product_name: p ? p.name : '',
+        current_price: p ? p.price : 0,
+        change_type: document.getElementById('simChange').value,
+        change_value: document.getElementById('simValue').value
+      };
+      App.showLoading(true);
+      const res = await Api.simulate(payload);
+      App.showLoading(false);
+      render(res, payload);
+    });
+
+    function render(res, payload) {
+      document.getElementById('simResults').style.display = 'block';
+      const cur = payload.current_price;
+      const isDecrease = payload.change_type.includes('decrease') || payload.change_type.includes('discount');
+      const v = parseFloat(payload.change_value) || 0;
+      const next = payload.change_type.includes('bundle') ? cur
+        : isDecrease ? cur * (1 - v / 100) : cur * (1 + v / 100);
+
+      document.getElementById('curPrice').textContent = App.egp(cur);
+      document.getElementById('curMeta').textContent = res.product;
+      document.getElementById('newPrice').textContent = App.egp(next);
+      document.getElementById('newMeta').textContent = `${payload.change_type} · ${v}%`;
+
+      const sign = n => (n >= 0 ? '+' : '');
+      const col = n => n >= 0 ? 'var(--success)' : 'var(--danger)';
+      document.getElementById('impactGrid').innerHTML = `
+        <div class="stat-card"><div class="kpi-label" data-i18n="sim.results.demand">${I18n.t('sim.results.demand')}</div>
+          <div class="kpi-value" style="color:${col(res.demand_change_pct)}">${sign(res.demand_change_pct)}${res.demand_change_pct}%</div></div>
+        <div class="stat-card"><div class="kpi-label" data-i18n="sim.results.revenue">${I18n.t('sim.results.revenue')}</div>
+          <div class="kpi-value" style="color:${col(res.revenue_impact_egp)}">${sign(res.revenue_impact_egp)}${App.egp(Math.abs(res.revenue_impact_egp)).replace('EGP ', '').replace(' ج.م','')}</div></div>
+        <div class="stat-card"><div class="kpi-label" data-i18n="sim.results.profit">${I18n.t('sim.results.profit')}</div>
+          <div class="kpi-value" style="color:${col(res.profit_impact_egp)}">${sign(res.profit_impact_egp)}${App.egp(Math.abs(res.profit_impact_egp)).replace('EGP ', '').replace(' ج.م','')}</div></div>`;
+
+      document.getElementById('riskBadge').innerHTML = App.riskBadge(res.risk_level);
+      document.getElementById('confFill').style.width = res.confidence_pct + '%';
+      document.getElementById('confVal').textContent = res.confidence_pct + '%';
+      const assumptions = ar() ? res.assumptions_ar : res.assumptions_en;
+      document.getElementById('assumptionsList').innerHTML = assumptions.map(a => `<li>${a}</li>`).join('');
+
+      document.getElementById('simResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.addEventListener('langchange', loadProducts);
+    loadProducts();
+  </script>
+</body>
+</html>

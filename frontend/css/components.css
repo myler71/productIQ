@@ -1,0 +1,173 @@
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--bg-card);
+}
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--teal); background: var(--teal-light); }
+.upload-zone .upload-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
+.upload-zone h3 { margin-bottom: 4px; }
+.upload-zone p { color: var(--text-secondary); font-size: 0.875rem; }
+.upload-zone .file-types { margin-top: 12px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.upload-zone .file-type {
+  padding: 4px 10px;
+  background: var(--border-light);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.upload-progress { margin-top: 16px; }
+.upload-progress .progress-bar {
+  height: 4px;
+  background: var(--border-light);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.upload-progress .progress-fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.dna-radar {
+  max-width: 300px;
+  margin: 0 auto;
+}
+.dna-dimension {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.dna-dimension .dim-label { min-width: 100px; font-size: 0.8125rem; font-weight: 500; }
+.dna-dimension .dim-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--border-light);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dna-dimension .dim-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.dna-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.report-card {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+.report-card .report-section { margin-bottom: 20px; }
+.report-card .report-section:last-child { margin-bottom: 0; }
+.report-card .report-section h3 {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.report-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.simulator-input {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.simulator-input .param-row {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.simulator-input .param-row .param-field { flex: 1; min-width: 200px; }
+.simulator-input .param-row .param-field label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.comparison-view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 768px) { .comparison-view { grid-template-columns: 1fr; } }
+.comparison-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.comparison-card.before { border-left: 3px solid var(--text-light); }
+.comparison-card.after { border-left: 3px solid var(--teal); }
+body[dir="rtl"] .comparison-card.before { border-left: none; border-right: 3px solid var(--text-light); }
+body[dir="rtl"] .comparison-card.after { border-right: 3px solid var(--teal); }
+.comparison-card .comp-header { margin-bottom: 12px; }
+.comparison-card .comp-header h4 { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+.comparison-card .comp-value { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+
+.confidence-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--info-bg);
+  border-radius: var(--radius-sm);
+  margin-top: 12px;
+}
+.confidence-meter .meter-label { font-size: 0.8125rem; color: var(--info); font-weight: 500; }
+.confidence-meter .meter-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(59,130,246,0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.confidence-meter .meter-fill {
+  height: 100%;
+  background: var(--info);
+  border-radius: 3px;
+}
+
+.assumptions-box {
+  padding: 12px 16px;
+  background: var(--gold-light);
+  border-radius: var(--radius-sm);
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  color: var(--warning);
+}
+.assumptions-box strong { display: block; margin-bottom: 4px; }
+
+.dna-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 640px) { .dna-comparison { grid-template-columns: 1fr; } }

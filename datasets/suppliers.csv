@@ -1,0 +1,6 @@
+supplier_id,supplier_name,supplier_name_ar,contact,lead_time_days,reliability_score
+S01,El Nour Supplies,النور للتوريدات,+20 100 234 5678,3,92
+S02,El Gomaa Tech,الجمعة للتكنولوجيا,+20 111 876 5432,5,85
+S03,Modern Electronics,الإلكترونيات الحديثة,+20 122 345 6789,2,95
+S04,Sony Egypt Distribution,سوني مصر للتوزيع,+20 100 987 6543,7,88
+S05,Delta Trading Co.,دلتا للتجارة,+20 111 234 5670,4,79

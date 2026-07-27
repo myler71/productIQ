@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-icon">PQ</div>
+        <div>
+          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
+          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
+          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
+          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
+          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
+          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
+          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
+          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
+        </div>
+      </nav>
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="hamburger">☰</button>
+          <div class="header-title" data-i18n="dashboard.title">Dashboard</div>
+        </div>
+        <div class="header-right">
+          <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- KPI row -->
+        <div class="stats-grid" id="kpiGrid"></div>
+
+        <!-- Charts row -->
+        <div class="grid-2 mb-3">
+          <div class="card">
+            <div class="card-header"><h3 data-i18n="dashboard.chart.trend">Weekly Sales Trend</h3></div>
+            <div class="card-body"><div style="height:260px"><canvas id="trendChart"></canvas></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 data-i18n="dashboard.chart.category">Revenue by Category</h3></div>
+            <div class="card-body"><div style="height:260px"><canvas id="catChart"></canvas></div></div>
+          </div>
+        </div>
+
+        <div class="grid-2 mb-3">
+          <div class="card">
+            <div class="card-header"><h3 data-i18n="dashboard.chart.topSellers">Top Sellers by Revenue</h3></div>
+            <div class="card-body"><div style="height:280px"><canvas id="topChart"></canvas></div></div>
+          </div>
+          <!-- AI Recommendations -->
+          <div class="card">
+            <div class="card-header"><h3>🤖 <span data-i18n="dashboard.ai.title">AI Recommendations</span></h3></div>
+            <div class="card-body" id="aiPanel" style="max-height:320px;overflow-y:auto">
+              <div class="empty-state" style="padding:24px"><div class="empty-icon">🤖</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tables row -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3 data-i18n="dashboard.table.slow">Slow Movers</h3></div>
+            <div class="card-body" style="padding:0"><table id="slowTable"></table></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 data-i18n="dashboard.table.stock">Stock Risk</h3></div>
+            <div class="card-body" style="padding:0"><table id="stockTable"></table></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    App.initSidebar('dashboard');
+    let charts = [];
+
+    function kpiCard(labelKey, value, change, icon, invert = false) {
+      const up = change >= 0;
+      const good = invert ? !up : up;
+      return `<div class="stat-card">
+        <div class="stat-header">
+          <div><div class="kpi-label" data-i18n="${labelKey}">${I18n.t(labelKey)}</div>
+          <div class="kpi-value">${value}</div></div>
+          <div class="stat-icon" style="background:var(--teal-light)">${icon}</div>
+        </div>
+        <div class="kpi-change ${good ? 'up' : 'down'}">${up ? '▲' : '▼'} ${Math.abs(change)}% ${I18n.t('common.vsLast')}</div>
+      </div>`;
+    }
+
+    function renderKPIs(k) {
+      document.getElementById('kpiGrid').innerHTML =
+        kpiCard('dashboard.kpi.revenue', App.egp(k.revenue), k.revenue_change, '💰') +
+        kpiCard('dashboard.kpi.profit', App.egp(k.profit), k.profit_change, '📈') +
+        kpiCard('dashboard.kpi.margin', k.margin + '%', k.margin_change, '🎯') +
+        kpiCard('dashboard.kpi.turnover', k.turnover + 'x', k.turnover_change * 100 / 10, '🔄');
+    }
+
+    function renderCharts(data) {
+      charts.forEach(c => c && c.destroy()); charts = [];
+      charts.push(Charts.line('trendChart',
+        data.weekly_trend.map(w => w.week), data.weekly_trend.map(w => w.revenue)));
+      charts.push(Charts.doughnut('catChart',
+        data.category_revenue.map(c => I18n.lang === 'ar' ? c.category_ar : c.category),
+        data.category_revenue.map(c => c.revenue)));
+      charts.push(Charts.bar('topChart',
+        data.top_sellers.map(p => I18n.lang === 'ar' ? p.name_ar : p.name),
+        data.top_sellers.map(p => p.revenue), { horizontal: true }));
+    }
+
+    function renderTables(data) {
+      const slow = data.slow_movers.map(p => `<tr>
+        <td><strong>${I18n.lang === 'ar' ? p.name_ar : p.name}</strong></td>
+        <td>${p.days_no_sale} <span data-i18n="dashboard.col.days">${I18n.t('dashboard.col.days')}</span></td>
+        <td>${p.stock}</td><td>${App.egp(p.tied_capital)}</td></tr>`).join('');
+      document.getElementById('slowTable').innerHTML =
+        `<thead><tr><th>${I18n.t('dashboard.col.product')}</th><th>${I18n.t('dashboard.col.days')}</th>
+        <th>${I18n.t('dashboard.col.stock')}</th><th>Capital</th></tr></thead><tbody>${slow}</tbody>`;
+
+      const badge = s => s === 'out'
+        ? `<span class="badge badge-danger">${I18n.lang === 'ar' ? 'نفد' : 'OUT'}</span>`
+        : `<span class="badge badge-warning">${I18n.lang === 'ar' ? 'حرج' : 'Critical'}</span>`;
+      const stock = data.stock_risk.map(p => `<tr>
+        <td><strong>${I18n.lang === 'ar' ? p.name_ar : p.name}</strong></td>
+        <td>${p.stock}</td><td>${badge(p.status)}</td></tr>`).join('');
+      document.getElementById('stockTable').innerHTML =
+        `<thead><tr><th>${I18n.t('dashboard.col.product')}</th><th>${I18n.t('dashboard.col.stock')}</th>
+        <th>${I18n.t('dashboard.col.status')}</th></tr></thead><tbody>${stock}</tbody>`;
+    }
+
+    async function renderAI() {
+      const panel = document.getElementById('aiPanel');
+      const recs = await Api.getRecommendations(I18n.lang);
+      const actionBadge = a => ({
+        restock: 'badge-success', discount: 'badge-warning',
+        bundle: 'badge-info', remove: 'badge-danger'
+      }[a] || 'badge-info');
+      const summary = I18n.lang === 'ar' ? recs.summary_ar : recs.summary_en;
+      let html = `<div style="padding:14px;background:var(--teal-light);border-radius:10px;margin-bottom:16px;font-size:0.875rem;line-height:1.65">${summary}</div>`;
+      recs.recommendations.forEach(r => {
+        const reason = I18n.lang === 'ar' ? r.reason_ar : r.reason_en;
+        const name = I18n.lang === 'ar' ? r.product_ar : r.product;
+        html += `<div style="padding:12px 0;border-bottom:1px solid var(--border-light)">
+          <div class="flex-between mb-1">
+            <strong style="font-size:0.875rem">${name}</strong>
+            <span class="badge ${actionBadge(r.action)}">${r.action.toUpperCase()}</span>
+          </div>
+          <div style="font-size:0.8125rem;color:var(--text-secondary);line-height:1.6">${reason}</div>
+          <div style="font-size:0.75rem;color:var(--text-light);margin-top:4px">${I18n.t('common.confidence')}: ${r.confidence}%</div>
+        </div>`;
+      });
+      panel.innerHTML = html;
+    }
+
+    async function load() {
+      App.showLoading(true);
+      const data = await Api.getAnalytics();
+      App.showLoading(false);
+      renderKPIs(data.kpis);
+      renderCharts(data);
+      renderTables(data);
+      renderAI();
+    }
+
+    document.addEventListener('langchange', load);
+    load();
+  </script>
+</body>
+</html>

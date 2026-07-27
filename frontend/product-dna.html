@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product DNA — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-icon">PQ</div>
+        <div>
+          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
+          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
+          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
+          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
+          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
+          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
+          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
+          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
+        </div>
+      </nav>
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="hamburger">☰</button>
+          <div>
+            <div class="header-title" data-i18n="dna.title">Product DNA</div>
+            <div class="header-breadcrumb" data-i18n="dna.subtitle">A visual fingerprint for every product.</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- Selectors -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="flex gap-2 wrap" style="align-items:end">
+              <div class="flex-1" style="min-width:220px">
+                <label style="font-size:0.8125rem;font-weight:500;color:var(--text-secondary);display:block;margin-bottom:4px" data-i18n="dna.select">Select a product</label>
+                <select id="productA"></select>
+              </div>
+              <div class="flex-1" style="min-width:220px">
+                <label style="font-size:0.8125rem;font-weight:500;color:var(--text-secondary);display:block;margin-bottom:4px" data-i18n="dna.selectSecond">Compare with</label>
+                <select id="productB"><option value="">—</option></select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DNA display -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3 id="nameA">—</h3>
+              <div class="flex gap-1" style="align-items:center">
+                <div class="dna-score" id="scoreA" style="background:var(--teal-light);color:var(--teal)">—</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="height:320px"><canvas id="dnaRadar"></canvas></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3 data-i18n="dna.health">Health Score</h3></div>
+            <div class="card-body" id="dimBars"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    App.initSidebar('dna');
+    const DIMS = ['popularity', 'margin', 'demand', 'risk', 'competitiveness', 'turnover', 'growth', 'value'];
+    let radar = null, products = [], dnaA = null, dnaB = null;
+
+    const dimLabel = d => I18n.t('dna.dim.' + d);
+    const pName = p => (I18n.lang === 'ar' ? p.name_ar : p.name);
+
+    async function loadProducts() {
+      products = await Api.getProductList();
+      const opts = products.map(p => `<option value="${p.id}">${pName(p)}</option>`).join('');
+      document.getElementById('productA').innerHTML = opts;
+      document.getElementById('productB').innerHTML = '<option value="">—</option>' + opts;
+      await refresh();
+    }
+
+    async function refresh() {
+      const idA = document.getElementById('productA').value;
+      const idB = document.getElementById('productB').value;
+      if (!idA) return;
+      dnaA = await Api.getProductDNA(idA);
+      dnaB = idB ? await Api.getProductDNA(idB) : null;
+      render();
+    }
+
+    function render() {
+      const pA = dnaA.product;
+      document.getElementById('nameA').textContent = pName(pA) + (dnaB ? '  vs  ' + pName(dnaB.product) : '');
+      const scoreEl = document.getElementById('scoreA');
+      scoreEl.textContent = dnaA.health_score;
+      const hc = App.healthColor(dnaA.health_score);
+      scoreEl.style.background = hc + '22'; scoreEl.style.color = hc;
+
+      const datasets = [{ label: pName(pA), data: DIMS.map(d => dnaA.dimensions[d]) }];
+      if (dnaB) datasets.push({ label: pName(dnaB.product), data: DIMS.map(d => dnaB.dimensions[d]) });
+      if (radar) radar.destroy();
+      radar = Charts.radar('dnaRadar', DIMS.map(dimLabel), datasets);
+
+      // Dimension bars
+      const bars = document.getElementById('dimBars');
+      let html = '';
+      DIMS.forEach(d => {
+        const vA = dnaA.dimensions[d];
+        const vB = dnaB ? dnaB.dimensions[d] : null;
+        html += `<div class="dna-dimension">
+          <span class="dim-label">${dimLabel(d)}</span>
+          <div class="dim-bar"><div class="dim-fill" style="width:${vA}%;background:${Charts.palette.teal}"></div></div>
+          <strong style="min-width:32px;text-align:right;font-size:0.8125rem">${vA}</strong>
+        </div>`;
+        if (vB !== null) {
+          html += `<div class="dna-dimension" style="margin-top:-6px;margin-bottom:14px">
+            <span class="dim-label" style="opacity:0">·</span>
+            <div class="dim-bar"><div class="dim-fill" style="width:${vB}%;background:${Charts.palette.gold}"></div></div>
+            <strong style="min-width:32px;text-align:right;font-size:0.8125rem;color:var(--gold)">${vB}</strong>
+          </div>`;
+        }
+      });
+      html += `<div class="mt-3" style="text-align:center">
+        <span class="badge ${dnaA.health_score >= 70 ? 'badge-success' : dnaA.health_score >= 45 ? 'badge-warning' : 'badge-danger'}" style="font-size:0.875rem;padding:8px 18px">
+          ${App.healthLabel(dnaA.health_score)} — ${dnaA.health_score}/100</span>
+      </div>`;
+      bars.innerHTML = html;
+    }
+
+    document.getElementById('productA').addEventListener('change', refresh);
+    document.getElementById('productB').addEventListener('change', refresh);
+    document.addEventListener('langchange', loadProducts);
+    loadProducts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+product_id,product_name,product_name_ar,category,category_ar,brand,unit_cost_egp,selling_price_egp,supplier_id
+P001,Samsung Galaxy A56,سامسونج جالاكسي A56,Smartphones,هواتف ذكية,Samsung,5100,5990,S01
+P002,iPhone 16 Pro,آيفون 16 برو,Smartphones,هواتف ذكية,Apple,32000,39990,S02
+P003,Xiaomi Redmi Note 14,شاومي ريدمي نوت 14,Smartphones,هواتف ذكية,Xiaomi,1500,1800,S03
+P004,Sony WH-1000XM6,سوني WH-1000XM6,Audio,صوتيات,Sony,10500,14990,S04
+P005,Samsung Galaxy Tab S10,سامسونج جالاكسي تاب S10,Tablets,تابلت,Samsung,11500,14990,S01
+P006,Anker PowerCore 20000,أنكر باوركور 20000,Accessories,إكسسوارات,Anker,980,1450,S05
+P007,JBL Flip 7,جي بي ال فليب 7,Audio,صوتيات,JBL,3100,4200,S05
+P008,Huawei Watch Fit 4,هواوي ووتش فيت 4,Wearables,أجهزة قابلة للارتداء,Huawei,2600,3500,S03
+P009,HP LaserJet Pro M404,طابعة اتش بي ليزر جيت برو,Printers,طابعات,HP,7800,9500,S01
+P010,Canon EOS R50,كانون EOS R50,Cameras,كاميرات,Canon,27500,32000,S04

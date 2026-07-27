@@ -1,0 +1,59 @@
+@media (max-width: 1200px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 992px) {
+  .page-content { padding: 24px 20px; }
+  .top-header { padding: 0 20px; }
+  .dna-comparison { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+  }
+  body[dir="rtl"] .sidebar { transform: translateX(100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+  }
+  .sidebar-overlay.show { display: block; }
+  .main-content { margin-left: 0; }
+  body[dir="rtl"] .main-content { margin-right: 0; }
+  .hamburger { display: flex !important; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .page-content { padding: 20px 16px; }
+  .top-header { padding: 0 16px; }
+  .comparison-view { grid-template-columns: 1fr; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .header-title { font-size: 1rem; }
+  .kpi-value { font-size: 1.375rem; }
+  .stat-card { padding: 16px; }
+  .card-body { padding: 16px; }
+  .card-header { padding: 16px 16px 0; }
+  .upload-zone { padding: 32px 16px; }
+  .simulator-input .param-row .param-field { min-width: 100%; }
+  .report-actions { flex-direction: column; }
+  .report-actions .btn { width: 100%; }
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 4px;
+  line-height: 1;
+}
