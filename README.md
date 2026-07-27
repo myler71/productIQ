@@ -8,7 +8,7 @@ ProductIQ is an AI decision-support platform for Egyptian retailers. Upload sale
 
 ---
 
-## The 4 Engines
+## The 5 Engines
 
 | Engine | What it does | How |
 |---|---|---|
@@ -17,6 +17,7 @@ ProductIQ is an AI decision-support platform for Egyptian retailers. Upload sale
 | **Product DNA** | 8-dimension visual fingerprint + health score, side-by-side compare | Deterministic scoring → Chart.js radar |
 | **Weekly CEO Report** | Executive summary, revenue, action items, supplier alerts — printable | LLM-generated, bilingual |
 | **What-If Simulator** | Price/discount scenarios → demand, revenue, profit, risk + stated assumptions | LLM with honest-assumption JSON |
+| **AI Board Meeting** | CFO, Marketing, Inventory & CEO agents debate a product, CEO delivers the final verdict | Multi-agent sequential LLM chain |
 
 All AI features degrade gracefully to deterministic rule-based output if the LLM is offline — **the demo never breaks**.
 
@@ -72,6 +73,7 @@ ProductIQ/
 │   ├── product-dna.html       # DNA radar + comparison
 │   ├── ceo-report.html        # Weekly executive report (printable)
 │   ├── simulator.html         # What-if simulator
+│   ├── board-meeting.html     # AI Board Meeting (multi-agent)
 │   ├── css/                   # Design system, layout, components, RTL, responsive
 │   ├── js/                    # i18n (AR/EN), charts, API client (mock fallback), utils
 │   └── assets/sample-data/    # Egyptian sample CSVs
@@ -83,7 +85,7 @@ ProductIQ/
 │   │   ├── database/store.py  # In-memory DataFrame store + CSV validation
 │   │   └── services/
 │   │       ├── analysis/engine.py   # Deterministic Pandas analytics + DNA scoring
-│   │       └── ai/                  # LLM service + chains (with fallback)
+│   │       └── ai/                  # LLM service, chains, crew (board meeting)
 │   ├── requirements.txt
 │   └── .env.example
 ├── datasets/                  # Sample data generator + CSVs
@@ -107,6 +109,7 @@ ProductIQ/
 | `/api/product-dna/{id}` | GET | 8-dimension DNA + health score |
 | `/api/ceo-report?lang=` | POST | Weekly executive report |
 | `/api/simulate` | POST | What-if simulation |
+| `/api/board-meeting` | POST | 4-agent board meeting on a product |
 
 ---
 

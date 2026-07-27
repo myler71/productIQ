@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Board Meeting — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .agent-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      margin-bottom: 16px; overflow: hidden; opacity: 0; transform: translateY(12px);
+      animation: agentIn 0.5s ease forwards;
+    }
+    @keyframes agentIn { to { opacity: 1; transform: none; } }
+    .agent-head {
+      display: flex; align-items: center; gap: 12px; padding: 14px 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .agent-avatar {
+      width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.125rem; font-weight: 700;
+    }
+    .agent-role { font-weight: 700; font-size: 0.9375rem; }
+    .agent-tag { font-size: 0.75rem; color: var(--text-light); }
+    .agent-body { padding: 16px 20px; font-size: 0.9rem; line-height: 1.75; color: var(--text-primary); }
+    .agent-card.final { border-width: 2px; border-color: var(--navy); box-shadow: var(--shadow-lg); }
+    .agent-card.final .agent-body {
+      background: linear-gradient(180deg, rgba(11,31,58,0.04), transparent);
+      font-weight: 500;
+    }
+    .final-ribbon {
+      display: inline-block; margin-top: 10px; padding: 5px 14px; border-radius: 20px;
+      background: var(--gold); color: white; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .context-panel {
+      background: var(--border-light); border-radius: var(--radius-sm);
+      padding: 14px 18px; font-size: 0.8125rem; line-height: 1.7; white-space: pre-wrap;
+      color: var(--text-secondary); margin-top: 16px; font-family: ui-monospace, monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-icon">PQ</div>
+        <div>
+          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
+          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
+          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
+          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
+          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
+          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
+          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
+          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
+          <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-icon">🏛️</span><span data-i18n="nav.board">Board Meeting</span></button>
+        </div>
+      </nav>
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="hamburger">☰</button>
+          <div>
+            <div class="header-title" data-i18n="board.title">AI Board Meeting</div>
+            <div class="header-breadcrumb" data-i18n="board.subtitle">Four executives. One decision.</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- Setup -->
+        <div class="simulator-input">
+          <div class="param-row">
+            <div class="param-field">
+              <label data-i18n="dna.select">Select a product</label>
+              <select id="boardProduct"></select>
+            </div>
+            <div>
+              <button class="btn btn-gold btn-lg" id="startBtn">🏛️ <span data-i18n="board.start">Start Board Meeting</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meeting output -->
+        <div id="meetingOutput" style="display:none; max-width:860px; margin:0 auto">
+          <div id="agentCards"></div>
+          <div class="card" style="margin-top:24px">
+            <div class="card-header"><h3 data-i18n="board.context">Case file reviewed by the board</h3></div>
+            <div class="card-body"><div class="context-panel" id="contextPanel"></div></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    App.initSidebar('board');
+    let products = [];
+    const ar = () => I18n.lang === 'ar';
+
+    async function loadProducts() {
+      products = await Api.getProductList();
+      document.getElementById('boardProduct').innerHTML = products.map(p =>
+        `<option value="${p.id}">${ar() && p.name_ar ? p.name_ar : p.name}</option>`).join('');
+    }
+
+    document.getElementById('startBtn').addEventListener('click', async () => {
+      const pid = document.getElementById('boardProduct').value;
+      App.showLoading(true);
+      const res = await Api.boardMeeting(pid, I18n.lang);
+      App.showLoading(false);
+      renderMeeting(res);
+    });
+
+    const AGENT_ICONS = { 'CFO': '💰', 'Marketing Director': '📈', 'Inventory Manager': '📦', 'CEO': '🧠' };
+
+    function renderMeeting(res) {
+      if (!res || !res.transcript) return;
+      document.getElementById('meetingOutput').style.display = 'block';
+      const wrap = document.getElementById('agentCards');
+      wrap.innerHTML = '';
+
+      res.transcript.forEach((agent, i) => {
+        const roleName = ar() ? agent.role_ar : agent.role_en;
+        const card = document.createElement('div');
+        card.className = 'agent-card' + (agent.is_final ? ' final' : '');
+        card.style.animationDelay = (i * 0.35) + 's';
+        const icon = AGENT_ICONS[agent.role_en] || '🤖';
+        card.innerHTML = `
+          <div class="agent-head">
+            <div class="agent-avatar" style="background:${agent.color}">${icon}</div>
+            <div>
+              <div class="agent-role">${roleName}</div>
+              <div class="agent-tag">ProductIQ Board</div>
+            </div>
+          </div>
+          <div class="agent-body">${agent.analysis.replace(/\n/g, '<br>')}
+            ${agent.is_final ? `<div><span class="final-ribbon">${ar() ? 'القرار النهائي' : 'Final Decision'}</span></div>` : ''}
+          </div>`;
+        wrap.appendChild(card);
+      });
+
+      document.getElementById('contextPanel').textContent = res.context || '';
+      document.getElementById('meetingOutput').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.addEventListener('langchange', loadProducts);
+    loadProducts();
+  </script>
+</body>
+</html>

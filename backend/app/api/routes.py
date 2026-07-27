@@ -3,6 +3,7 @@ from fastapi import APIRouter, File, UploadFile
 
 from app.database.store import store
 from app.services.ai.chains import ai_ceo_report, ai_recommendations, ai_simulate
+from app.services.ai.crew import run_board_meeting
 from app.services.analysis.engine import (
     compute_analytics,
     product_dna,
@@ -65,3 +66,11 @@ def ceo_report(lang: str = "en"):
 @router.post("/simulate")
 def simulate(payload: dict):
     return ai_simulate(payload)
+
+
+@router.post("/board-meeting")
+def board_meeting(payload: dict):
+    """Run a 4-agent board meeting on a product.
+    Body: {"product_id": "P001", "lang": "en"}
+    """
+    return run_board_meeting(payload.get("product_id", ""), payload.get("lang", "en"))

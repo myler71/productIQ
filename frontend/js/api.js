@@ -64,6 +64,16 @@ const Api = {
   async loadSample() {
     const data = await this.request('/api/load-sample', { method: 'POST' });
     return data || MockData.uploadResult(true);
+  },
+
+  /* ── Board meeting ── */
+  async boardMeeting(productId, lang = 'en') {
+    const data = await this.request('/api/board-meeting', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: productId, lang })
+    });
+    return data || MockData.boardMeeting(productId);
   }
 };
 
@@ -240,6 +250,24 @@ const MockData = {
         { file: 'sales.csv', row: 88, reason_en: 'Price mismatch vs catalog (flagged for review)', reason_ar: 'سعر مختلف عن الكتالوج (للمراجعة)' },
         { file: 'sales.csv', row: 151, reason_en: 'Suspected duplicate transaction', reason_ar: 'اشتباه في معاملة مكررة' },
         { file: 'sales.csv', row: 240, reason_en: 'Unusual quantity (18 units) — confirm', reason_ar: 'كمية غير معتادة (18 وحدة) — تأكيد' }
+      ]
+    };
+  },
+
+  boardMeeting(productId) {
+    const p = this._products.find(x => x.id === productId) || this._products[0];
+    return {
+      product_name: p.name,
+      context: `Product: ${p.name}\nCost: ${p.cost} EGP | Price: ${p.price} EGP\nStock: ${p.stock} units | Sold (30d): ${p.sold30}\nRevenue (30d): ${p.revenue} EGP`,
+      transcript: [
+        { role_en: 'CFO', role_ar: 'المدير المالي', color: '#3B82F6',
+          analysis: `${p.name} carries a margin of ~${Math.round((p.price - p.cost) / p.price * 100)}% on a ${p.cost} EGP cost base. With ${p.stock} units on hand, capital exposure is ${(p.stock * p.cost).toLocaleString()} EGP. Sell-through must stay strong to justify this position. RECOMMENDATION: monitor margin closely, proceed if turnover holds.` },
+        { role_en: 'Marketing Director', role_ar: 'مدير التسويق', color: '#10B981',
+          analysis: `${p.name} is a ${p.category} product with solid brand recognition in Egypt. Sold ${p.sold30} units last month — demand signal is ${p.sold30 > 20 ? 'strong' : 'moderate'}. Competitors position aggressively on price in this segment. RECOMMENDATION: keep stocked, consider a targeted campaign if velocity drops.` },
+        { role_en: 'Inventory Manager', role_ar: 'مدير المخزون', color: '#F59E0B',
+          analysis: `Current stock is ${p.stock} units against a 30-day pace of ${p.sold30}. That is ${p.sold30 > 0 ? Math.round(p.stock / Math.max(p.sold30 / 30, 1)) + ' days of cover' : 'no velocity'}. Supplier lead time factors into reorder timing. RECOMMENDATION: ${p.stock === 0 ? 'restock immediately' : p.stock > p.sold30 * 2 ? 'hold orders, reduce overstock' : 'maintain current levels'}.` },
+        { role_en: 'CEO', role_ar: 'الرئيس التنفيذي', color: '#0B1F3A', is_final: true,
+          analysis: `After hearing all departments: ${p.name} shows ${p.sold30 > 20 ? 'strong velocity with acceptable margin' : 'moderate performance'}. The financial exposure is manageable and market demand exists. FINAL DECISION: ${p.stock === 0 ? 'restock 50-100 units now' : p.stock > p.sold30 * 2 ? 'pause restocking, run a clearance campaign' : 'stock conservatively at current levels and reassess in 30 days'}.` }
       ]
     };
   }
