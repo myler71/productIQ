@@ -2,13 +2,13 @@
 
 > Turn your store data into business decisions. Built for the Egyptian market — bilingual (Arabic/English), EGP-native.
 
-ProductIQ is an AI decision-support platform for Egyptian retailers. Upload sales + inventory CSVs → get deterministic analytics, AI recommendations (Arabic/English), Product DNA profiles, a weekly CEO report, and a what-if decision simulator.
+ProductIQ is an AI decision-support platform for Egyptian retailers. Upload sales + inventory CSVs → get deterministic analytics, AI recommendations (Arabic/English), Product DNA profiles, a weekly CEO report, a what-if decision simulator, an AI board meeting, and a conversational market research agent.
 
 **Core principle:** the code does the math, the LLM does the reasoning. Deterministic Pandas analytics compute the numbers; LangChain + Groq turn them into plain-language decisions.
 
 ---
 
-## The 5 Engines
+## The 7 Engines
 
 | Engine | What it does | How |
 |---|---|---|
@@ -18,8 +18,59 @@ ProductIQ is an AI decision-support platform for Egyptian retailers. Upload sale
 | **Weekly CEO Report** | Executive summary, revenue, action items, supplier alerts — printable | LLM-generated, bilingual |
 | **What-If Simulator** | Price/discount scenarios → demand, revenue, profit, risk + stated assumptions | LLM with honest-assumption JSON |
 | **AI Board Meeting** | CFO, Marketing, Inventory & CEO agents debate a product, CEO delivers the final verdict | Multi-agent sequential LLM chain |
+| **Market Research** | Conversational agent that plans, searches (Tavily MCP), extracts facts, and generates bilingual reports with citations | MCP client + LLM pipeline |
 
 All AI features degrade gracefully to deterministic rule-based output if the LLM is offline — **the demo never breaks**.
+
+---
+
+## Architecture
+
+```
+ProductIQ/
+├── frontend/                  # Vanilla HTML/CSS/JS — no build step
+│   ├── index.html             # Landing page
+│   ├── login.html             # Optional user auth
+│   ├── upload.html            # CSV upload + validation
+│   ├── dashboard.html         # Analytics + AI recommendations
+│   ├── product-dna.html       # DNA radar + comparison
+│   ├── ceo-report.html        # Weekly executive report (printable)
+│   ├── simulator.html         # What-if simulator
+│   ├── board-meeting.html     # AI Board Meeting (multi-agent)
+│   ├── research.html          # Conversational market research
+│   ├── history.html           # Persistent memory (research, board decisions, snapshots)
+│   ├── css/                   # Design system, layout, components, RTL, responsive
+│   ├── js/                    # i18n (AR/EN), charts, API client (mock fallback), utils
+│   └── assets/sample-data/    # Egyptian sample CSVs
+├── backend/
+│   ├── app/
+│   │   ├── main.py            # FastAPI entry + static frontend serving
+│   │   ├── api/
+│   │   │   ├── routes.py      # /api/* endpoints
+│   │   │   └── auth.py        # Login/logout/session (signed cookies)
+│   │   ├── core/config.py     # .env config
+│   │   ├── database/
+│   │   │   ├── store.py       # In-memory DataFrame store + CSV validation
+│   │   │   ├── schemas.py     # Pydantic models for requests/responses
+│   │   │   └── users.py       # User credentials (bcrypt + argon2)
+│   │   └── services/
+│   │       ├── analysis/
+│   │       │   ├── engine.py      # Deterministic Pandas analytics + DNA scoring
+│   │       │   └── simulation.py  # What-if simulation logic
+│   │       ├── ai/                # LLM service, chains, crew (board meeting)
+│   │       ├── memory/            # SQLite-backed persistent memory store
+│   │       └── research/          # MCP client + conversational research agent
+│   ├── requirements.txt
+│   └── .env.example
+├── datasets/                  # Sample data generator + CSVs
+├── notebooks/
+│   ├── ProductIQ_AI_Operations.ipynb   # LangChain · RAG · CrewAI · What-If
+│   └── ProductIQ_AI_Complete.ipynb     # Full pipeline demo
+├── tests/                     # Pytest suite (auth, analytics, routes, LLM, memory, etc.)
+├── .github/workflows/ci.yml   # CI pipeline
+├── Dockerfile                 # Multi-stage Docker build
+└── conftest.py                # Shared test fixtures
+```
 
 ---
 
@@ -44,15 +95,23 @@ Copy `backend/.env.example` → `backend/.env` and add your keys:
 ```
 GROQ_API_KEY=your-key
 GROQ_MODEL=llama-3.3-70b-versatile
+TAVILY_API_KEY=your-key   # for the market research agent
 ```
 
 No key? Everything still works with deterministic fallback output.
 
-### 3. Frontend only (no backend)
+### 3. Docker
+
+```powershell
+docker build -t productiq .
+docker run -p 8000:8000 productiq
+```
+
+### 4. Frontend only (no backend)
 
 Open any file in `frontend/` directly in a browser — the UI falls back to built-in mock data automatically. Perfect for a quick design demo.
 
-### 4. Sample data
+### 5. Sample data
 
 The Egyptian electronics-shop dataset (10 products, ~330 sales over 4 months, 5 suppliers) is pre-generated in `datasets/` and `frontend/assets/sample-data/`. Regenerate:
 
@@ -60,43 +119,17 @@ The Egyptian electronics-shop dataset (10 products, ~330 sales over 4 months, 5 
 python datasets/generate_sample_data.py
 ```
 
----
+### 6. Run tests
 
-## Project Structure
-
-```
-ProductIQ/
-├── frontend/                  # Vanilla HTML/CSS/JS — no build step
-│   ├── index.html             # Landing page
-│   ├── upload.html            # CSV upload + validation
-│   ├── dashboard.html         # Analytics + AI recommendations
-│   ├── product-dna.html       # DNA radar + comparison
-│   ├── ceo-report.html        # Weekly executive report (printable)
-│   ├── simulator.html         # What-if simulator
-│   ├── board-meeting.html     # AI Board Meeting (multi-agent)
-│   ├── css/                   # Design system, layout, components, RTL, responsive
-│   ├── js/                    # i18n (AR/EN), charts, API client (mock fallback), utils
-│   └── assets/sample-data/    # Egyptian sample CSVs
-├── backend/
-│   ├── app/
-│   │   ├── main.py            # FastAPI entry + static frontend serving
-│   │   ├── api/routes.py      # /api/* endpoints
-│   │   ├── core/config.py     # .env config
-│   │   ├── database/store.py  # In-memory DataFrame store + CSV validation
-│   │   └── services/
-│   │       ├── analysis/engine.py   # Deterministic Pandas analytics + DNA scoring
-│   │       └── ai/                  # LLM service, chains, crew (board meeting)
-│   ├── requirements.txt
-│   └── .env.example
-├── datasets/                  # Sample data generator + CSVs
-├── notebooks/
-│   └── ProductIQ_AI_Operations.ipynb   # LangChain · RAG · CrewAI · What-If
-└── tests/smoke_test.py
+```powershell
+cd backend && python -m pytest
 ```
 
 ---
 
 ## API Reference
+
+### Core
 
 | Endpoint | Method | Purpose |
 |---|---|---|
@@ -111,16 +144,41 @@ ProductIQ/
 | `/api/simulate` | POST | What-if simulation |
 | `/api/board-meeting` | POST | 4-agent board meeting on a product |
 
+### Auth
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/auth/login` | POST | Login (returns signed cookie) |
+| `/api/auth/logout` | POST | Clear session |
+| `/api/auth/me` | GET | Check auth status |
+
+### Market Research
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/research/status` | GET | MCP/Tavily connection status |
+| `/api/research/chat` | POST | Send a message to the research agent |
+| `/api/research/history` | GET | Conversation history |
+| `/api/research/report` | POST | Generate structured bilingual report from findings |
+
+### Memory
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/memory/research-history` | GET | Past research conversations |
+| `/api/memory/product-findings` | GET | Structured research reports per product |
+| `/api/memory/board-decisions` | GET | Past board meeting verdicts |
+| `/api/memory/metrics-snapshots` | GET | Analytics snapshots for trend comparison |
+| `/api/memory/diff/{product}` | GET | Compare current analytics vs last snapshot |
+| `/api/memory/snapshot` | POST | Save current analytics as a snapshot |
+| `/api/memory/export` | GET | Download memory as JSON |
+
 ---
 
-## The AI Operations Notebook
+## The AI Notebooks
 
-`notebooks/ProductIQ_AI_Operations.ipynb` demonstrates every AI pattern in one place:
-
-1. **LangChain** — structured JSON recommendations (Pydantic + Groq)
-2. **RAG** — FAISS vector search over a product knowledge base
-3. **CrewAI** — 4-agent board meeting (CEO/CFO/Marketing/Inventory)
-4. **What-If** — simulation chain with stated assumptions
+- `notebooks/ProductIQ_AI_Operations.ipynb` — LangChain, RAG (FAISS), CrewAI board meeting, What-If
+- `notebooks/ProductIQ_AI_Complete.ipynb` — Full pipeline with all v2 features
 
 ---
 
@@ -135,7 +193,7 @@ ProductIQ/
 
 ## "Why not just ChatGPT + a spreadsheet?"
 
-ProductIQ is not a chatbot. It's a domain decision engine: deterministic retail math (turnover, reorder points, tied capital) computed reliably in code, multi-file joins (sales + inventory + suppliers + pricing) done cleanly every time, a persistent bilingual interface, and AI that states its assumptions and confidence — none of which ad-hoc ChatGPT use provides.
+ProductIQ is not a chatbot. It's a domain decision engine: deterministic retail math (turnover, reorder points, tied capital) computed reliably in code, multi-file joins (sales + inventory + suppliers + pricing) done cleanly every time, a persistent bilingual interface, AI that states its assumptions and confidence, and a research agent that cites every external source — none of which ad-hoc ChatGPT use provides.
 
 ---
 
@@ -143,4 +201,4 @@ ProductIQ is not a chatbot. It's a domain decision engine: deterministic retail 
 
 - `.env` is git-ignored. Never commit API keys.
 - The frontend works standalone (mock fallback) — the backend makes it real.
-- Run tests: `python tests/smoke_test.py` (from `backend/`)
+- Run tests: `cd backend && python -m pytest`
