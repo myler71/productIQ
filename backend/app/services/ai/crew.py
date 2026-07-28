@@ -10,14 +10,14 @@ deterministic output if the LLM is offline.
 """
 import json
 import re
-
-from app.services.analysis.engine import compute_analytics, _joined
-from app.services.ai.llm import get_llm
-from app.database.store import store
 from datetime import timedelta
 
+from app.services.analysis.engine import compute_analytics, _joined
+from app.services.ai.llm import invoke_llm, llm_status
+from app.services.memory.store import record_board_decision
 
-def _product_context(product_id: str) -> str:
+
+def _product_context(product_id: str, store) -> str:
     """Build a text summary of the product for the agents to debate."""
     store.ensure_loaded()
     prod = store.products[store.products["product_id"] == product_id]
@@ -59,7 +59,7 @@ Supplier: {sup_name} (reliability: {sup_reliability}%, lead time: {sup_lead} day
 Competitors in catalog: {comp_info}"""
 
 
-def _agent_call(llm, role, persona, task, context, prior_analyses=""):
+def _agent_call(role, persona, task, context, prior_analyses=""):
     """One agent's turn: persona + task + context (+ prior analyses for CEO)."""
     prior_section = ""
     if prior_analyses:
@@ -78,22 +78,22 @@ Your task: {task}
 Give your assessment in 3-4 sentences. Be specific with numbers (EGP).
 End with a clear one-line recommendation starting with RECOMMENDATION:"""
 
-    try:
-        resp = llm.invoke(prompt)
-        return resp.content.strip()
-    except Exception:
-        return f"[{role} offline] Unable to analyze. RECOMMENDATION: defer to CEO."
+    result = invoke_llm(prompt, fallback=f"[{role} offline] Unable to analyze. RECOMMENDATION: defer to CEO.")
+    return result["content"]
 
 
-def run_board_meeting(product_id: str, lang: str = "en") -> dict:
+def run_board_meeting(product_id: str, lang: str = "en", store=None) -> dict:
     """Run a 4-agent board meeting on a product. Returns the transcript."""
-    context = _product_context(product_id)
-    llm = get_llm()
+    if store is None:
+        from app.database.store import manager as _manager
+        store = _manager.get("anonymous")
+    context = _product_context(product_id, store)
+    status = llm_status()
     ar = lang == "ar"
 
     prod = store.products[store.products["product_id"] == product_id]
     if prod.empty:
-        return {"error": "product not found"}
+        return {"error": "product not found", "engine": "deterministic"}
     p = prod.iloc[0]
     product_name = p.product_name_ar if (ar and p.product_name_ar) else p.product_name
 
@@ -128,24 +128,14 @@ def run_board_meeting(product_id: str, lang: str = "en") -> dict:
         },
     }
 
-    if llm:
+    if status["available"]:
         # Sequential agent calls
-        cfo_text = _agent_call(llm, "CFO",
-            personas["cfo"]["persona"],
-            personas["cfo"]["task_en"], context)
-
-        mkt_text = _agent_call(llm, "Marketing Director",
-            personas["marketing"]["persona"],
-            personas["marketing"]["task_en"], context)
-
-        inv_text = _agent_call(llm, "Inventory Manager",
-            personas["inventory"]["persona"],
-            personas["inventory"]["task_en"], context)
-
+        cfo_text = _agent_call("CFO", personas["cfo"]["persona"], personas["cfo"]["task_en"], context)
+        mkt_text = _agent_call("Marketing Director", personas["marketing"]["persona"], personas["marketing"]["task_en"], context)
+        inv_text = _agent_call("Inventory Manager", personas["inventory"]["persona"], personas["inventory"]["task_en"], context)
         prior = f"CFO: {cfo_text}\n\nMarketing: {mkt_text}\n\nInventory: {inv_text}"
-        ceo_text = _agent_call(llm, "CEO",
-            personas["ceo"]["persona"],
-            personas["ceo"]["task_en"], context, prior)
+        ceo_text = _agent_call("CEO", personas["ceo"]["persona"], personas["ceo"]["task_en"], context, prior)
+        engine = "llm"
     else:
         # Deterministic fallback
         a = compute_analytics()
@@ -153,20 +143,25 @@ def run_board_meeting(product_id: str, lang: str = "en") -> dict:
         mkt_text = _fallback_agent("marketing", context, a)
         inv_text = _fallback_agent("inventory", context, a)
         ceo_text = _fallback_agent("ceo", context, a)
+        engine = "deterministic"
 
+    transcript_data = [
+        {"role_en": personas["cfo"]["role_en"], "role_ar": personas["cfo"]["role_ar"],
+         "color": personas["cfo"]["color"], "analysis": cfo_text},
+        {"role_en": personas["marketing"]["role_en"], "role_ar": personas["marketing"]["role_ar"],
+         "color": personas["marketing"]["color"], "analysis": mkt_text},
+        {"role_en": personas["inventory"]["role_en"], "role_ar": personas["inventory"]["role_ar"],
+         "color": personas["inventory"]["color"], "analysis": inv_text},
+        {"role_en": personas["ceo"]["role_en"], "role_ar": personas["ceo"]["role_ar"],
+         "color": personas["ceo"]["color"], "analysis": ceo_text, "is_final": True},
+    ]
+    verdict = transcript_data[-1]["analysis"] if transcript_data else ""
+    record_board_decision(product_name, context, transcript_data, verdict, engine)
     return {
         "product_name": product_name,
         "context": context,
-        "transcript": [
-            {"role_en": personas["cfo"]["role_en"], "role_ar": personas["cfo"]["role_ar"],
-             "color": personas["cfo"]["color"], "analysis": cfo_text},
-            {"role_en": personas["marketing"]["role_en"], "role_ar": personas["marketing"]["role_ar"],
-             "color": personas["marketing"]["color"], "analysis": mkt_text},
-            {"role_en": personas["inventory"]["role_en"], "role_ar": personas["inventory"]["role_ar"],
-             "color": personas["inventory"]["color"], "analysis": inv_text},
-            {"role_en": personas["ceo"]["role_en"], "role_ar": personas["ceo"]["role_ar"],
-             "color": personas["ceo"]["color"], "analysis": ceo_text, "is_final": True},
-        ],
+        "engine": engine,
+        "transcript": transcript_data,
     }
 
 

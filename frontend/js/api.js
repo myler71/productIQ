@@ -7,7 +7,7 @@ const API_BASE = 'http://127.0.0.1:8000';
 const Api = {
   async request(path, options = {}) {
     try {
-      const res = await fetch(API_BASE + path, options);
+      const res = await fetch(API_BASE + path, { ...options, credentials: 'include' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (err) {
@@ -125,9 +125,9 @@ const MockData = {
         { week: 'W7', revenue: 142100 }, { week: 'W8', revenue: 151300 }
       ],
       slow_movers: [
-        { name: 'HP LaserJet Pro M404', name_ar: 'اتش بي ليزر جيت برو', days_no_sale: 47, stock: 8, tied_capital: 62400 },
-        { name: 'Canon EOS R50', name_ar: 'كانون EOS R50', days_no_sale: 21, stock: 3, tied_capital: 82500 },
-        { name: 'JBL Flip 7', name_ar: 'جي بي ال فليب 7', days_no_sale: 12, stock: 18, tied_capital: 55800 }
+        { name: 'HP LaserJet Pro M404', name_ar: 'اتش بي ليزر جيت برو', days_no_sale: 47, stock: 8, tied_capital: 62400, lost_profit_egp: 12200, recovery_suggestion: 'Liquidate \u2014 discount 20-30% or bundle to clear' },
+        { name: 'Canon EOS R50', name_ar: 'كانون EOS R50', days_no_sale: 21, stock: 3, tied_capital: 82500, lost_profit_egp: 3400, recovery_suggestion: 'Run a 10-15% discount campaign for 2 weeks; reassess' },
+        { name: 'JBL Flip 7', name_ar: 'جي بي ال فليب 7', days_no_sale: 12, stock: 18, tied_capital: 55800, lost_profit_egp: 1200, recovery_suggestion: 'Bundle with a fast-moving product to move stock' }
       ],
       stock_risk: [
         { name: 'Xiaomi Redmi Note 14', name_ar: 'شاومي ريدمي نوت 14', stock: 0, status: 'out' },
@@ -215,12 +215,24 @@ const MockData = {
   simulate(payload) {
     const isDecrease = (payload.change_type || '').includes('decrease') || (payload.change_type || '').includes('discount');
     const v = parseFloat(payload.change_value) || 10;
+    const cost = 5100;
+    const curPrice = payload.current_price || 5990;
+    const curMarginPct = Math.round(((curPrice - cost) / curPrice) * 100 * 10) / 10;
+    const newPrice = isDecrease ? curPrice * (1 - v / 100) : curPrice * (1 + v / 100);
+    const projMarginPct = Math.round(((newPrice - cost) / newPrice) * 100 * 10) / 10;
     return {
       product: payload.product_name || 'Samsung Galaxy A56',
-      current_price: payload.current_price || 5990,
+      current_price: curPrice,
       demand_change_pct: isDecrease ? Math.round(v * 2.1) : -Math.round(v * 1.6),
       revenue_impact_egp: isDecrease ? Math.round(v * 850) : -Math.round(v * 620),
       profit_impact_egp: isDecrease ? -Math.round(v * 180) : Math.round(v * 240),
+      current_margin_pct: curMarginPct,
+      projected_margin_pct: projMarginPct,
+      breakeven_units: isDecrease ? Math.ceil(45 * (curPrice - cost) / (newPrice - cost)) : 0,
+      profit_breakdown: {
+        volume_impact_egp: isDecrease ? Math.round(v * 400) : -Math.round(v * 300),
+        margin_impact_egp: isDecrease ? -Math.round(v * 580) : Math.round(v * 540),
+      },
       risk_level: v > 15 ? 'high' : v > 7 ? 'medium' : 'low',
       confidence_pct: 72,
       assumptions_en: [

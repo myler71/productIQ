@@ -1,0 +1,736 @@
+{
+  "research_history": [
+    {
+      "id": 42,
+      "session_id": "t1",
+      "role": "assistant",
+      "content": "The Samsung Galaxy A56 is available in Egypt with prices ranging from EGP 18,000 to 23,500 in Cairo [3] and a best price of EGP 21,499 at noon with free shipping [1]. The device is also available on Amazon Egypt [2].",
+      "content_ar": "يتم توفير سامسونج جالاكسي A56 في مصر مع أسعار تتراوح من 18,000 إلى 23,500 جنيه في القاهرة [3] وأفضل سعر هو 21,499 جنيه في الظهر مع شحن مجاني [1]. الجهاز متاح أيضًا على أمازون مصر [2].",
+      "sources": [
+        {
+          "n": 1,
+          "url": "https://eg.pricena.com/a56",
+          "title": "A56 price Egypt"
+        },
+        {
+          "n": 2,
+          "url": "https://www.amazon.eg/a56",
+          "title": "A56 on Amazon Egypt"
+        },
+        {
+          "n": 3,
+          "url": "https://www.dubizzle.com.eg/a56",
+          "title": "A56 dubizzle"
+        }
+      ],
+      "engine": "llm",
+      "created_at": "2026-07-28T17:10:45.783994"
+    },
+    {
+      "id": 41,
+      "session_id": "t1",
+      "role": "user",
+      "content": "A56 price?",
+      "content_ar": "",
+      "sources": [],
+      "engine": "deterministic",
+      "created_at": "2026-07-28T17:10:44.349754"
+    },
+    {
+      "id": 40,
+      "session_id": "s1",
+      "role": "assistant",
+      "content": "The Samsung Galaxy A56 is available in Egypt with prices ranging from EGP 18,000 to 23,500 [3] and a best price of EGP 21,499 at noon with free shipping [1]. The retailer's internal data shows a price of 5990.0 EGP, which is significantly lower than market prices [1][3]. The product is also available on Amazon Egypt [2].",
+      "content_ar": "هاتف سامسونج جالاكسي A56 متوفر في مصر بسعر يتراوح بين 18,000 و 23,500 جنيه [3] وسعر أفضل يبلغ 21,499 جنيه عند منتصف الليل مع شحن مجاني [1]. بيانات التاجر الداخلية تظهر سعرًا يبلغ 5990.0 جنيه ، وهو أقل بكثير من أسعار السوق [1][3]. المنتج متوفر أيضًا على أمازون مصر [2].",
+      "sources": [
+        {
+          "n": 1,
+          "url": "https://eg.pricena.com/a56",
+          "title": "A56 price Egypt"
+        },
+        {
+          "n": 2,
+          "url": "https://www.amazon.eg/a56",
+          "title": "A56 on Amazon Egypt"
+        },
+        {
+          "n": 3,
+          "url": "https://www.dubizzle.com.eg/a56",
+          "title": "A56 dubizzle"
+        }
+      ],
+      "engine": "llm",
+      "created_at": "2026-07-28T17:10:42.073424"
+    },
+    {
+      "id": 39,
+      "session_id": "s1",
+      "role": "user",
+      "content": "Samsung Galaxy A56 price?",
+      "content_ar": "",
+      "sources": [],
+      "engine": "deterministic",
+      "created_at": "2026-07-28T17:10:40.253701"
+    }
+  ],
+  "product_findings": [
+    {
+      "id": 37,
+      "product": "A56 price?",
+      "engine": "llm",
+      "created_at": "2026-07-28T17:10:45.805006",
+      "report": {
+        "product": "A56 price?",
+        "summary_en": "The Samsung Galaxy A56 is available in Egypt with prices ranging from EGP 18,000 to 23,500 in Cairo [3] and a best price of EGP 21,499 at noon with free shipping [1]. The device is also available on Amazon Egypt [2].",
+        "summary_ar": "يتم توفير سامسونج جالاكسي A56 في مصر مع أسعار تتراوح من 18,000 إلى 23,500 جنيه في القاهرة [3] وأفضل سعر هو 21,499 جنيه في الظهر مع شحن مجاني [1]. الجهاز متاح أيضًا على أمازون مصر [2].",
+        "price_landscape": [
+          {
+            "point": "21,499 EGP at noon",
+            "source_n": 1
+          },
+          {
+            "point": "18,000 to 23,500 EGP in Cairo",
+            "source_n": 3
+          }
+        ],
+        "competitors": [
+          {
+            "name": "Amazon Egypt",
+            "note": "Samsung Galaxy A56 256GB available",
+            "source_n": 2
+          },
+          {
+            "name": "dubizzle",
+            "note": "Samsung A56 prices range EGP 18,000 to 23,500 in Cairo",
+            "source_n": 3
+          }
+        ],
+        "demand_signals": [],
+        "risks": [],
+        "opportunities": [],
+        "recommended_action": "Stock the Samsung Galaxy A56 at a competitive price around 21,499 EGP",
+        "sources": [
+          {
+            "n": 1,
+            "url": "https://eg.pricena.com/a56",
+            "title": "A56 price Egypt"
+          },
+          {
+            "n": 2,
+            "url": "https://www.amazon.eg/a56",
+            "title": "A56 on Amazon Egypt"
+          },
+          {
+            "n": 3,
+            "url": "https://www.dubizzle.com.eg/a56",
+            "title": "A56 dubizzle"
+          }
+        ],
+        "confidence": 80,
+        "confidence_basis": "The confidence is based on the availability of the device on multiple platforms and the presence of a competitive price landscape [1, 2, 3].",
+        "internal_match": null,
+        "gaps": [],
+        "engine": "llm",
+        "queries": [
+          "A56 price in Egypt EGP",
+          "A56 competitors in Egyptian market",
+          "A56 customer reviews in Egypt EGP"
+        ],
+        "notes": [],
+        "matched_product": null
+      }
+    },
+    {
+      "id": 36,
+      "product": "Samsung Galaxy A56",
+      "engine": "llm",
+      "created_at": "2026-07-28T17:10:44.327705",
+      "report": {
+        "product": "Samsung Galaxy A56",
+        "summary_en": "The Samsung Galaxy A56 is available in Egypt with prices ranging from EGP 18,000 to 23,500 [3] and a best price of EGP 21,499 at noon with free shipping [1]. The retailer's internal price of 5990.0 EGP seems significantly lower than market prices [1][3]. The device is also available on Amazon Egypt [2].",
+        "summary_ar": "هاتف سامسونج جالاكسي A56 متوفر في مصر بسعر يتراوح بين 18,000 و 23,500 جنيه [3] وسعر أفضل يبلغ 21,499 جنيه عند منتصف الليل مع شحن مجاني [1]. السعر الداخلي للتاجر البالغ 5990.0 جنيه يبدو منخفضًا بشكل كبير مقارنة بالأسعار السوقية [1][3]. الهاتف أيضًا متوفر على أمازون مصر [2].",
+        "price_landscape": [
+          {
+            "point": "21,499 EGP at noon",
+            "source_n": 1
+          },
+          {
+            "point": "18,000 to 23,500 EGP in Cairo",
+            "source_n": 3
+          }
+        ],
+        "competitors": [
+          {
+            "name": "noon",
+            "note": "offers free shipping",
+            "source_n": 1
+          },
+          {
+            "name": "Amazon Egypt",
+            "note": "offers 256GB variant",
+            "source_n": 2
+          },
+          {
+            "name": "dubizzle",
+            "note": "prices range from 18,000 to 23,500 EGP",
+            "source_n": 3
+          }
+        ],
+        "demand_signals": [
+          {
+            "signal": "availability on multiple platforms",
+            "source_n": 1
+          },
+          {
+            "signal": "price variation across platforms",
+            "source_n": 3
+          }
+        ],
+        "risks": [
+          "pricing significantly lower than market prices may lead to losses"
+        ],
+        "opportunities": [
+          "capitalizing on demand by offering competitive pricing"
+        ],
+        "recommended_action": "do not stock at the internal price of 5990.0 EGP, consider pricing around 21,499 EGP",
+        "sources": [
+          {
+            "n": 1,
+            "url": "https://eg.pricena.com/a56",
+            "title": "A56 price Egypt"
+          },
+          {
+            "n": 2,
+            "url": "https://www.amazon.eg/a56",
+            "title": "A56 on Amazon Egypt"
+          },
+          {
+            "n": 3,
+            "url": "https://www.dubizzle.com.eg/a56",
+            "title": "A56 dubizzle"
+          }
+        ],
+        "confidence": 80,
+        "confidence_basis": "based on available market data from multiple sources, including prices and competitor information",
+        "internal_match": {
+          "id": "P001",
+          "name": "Samsung Galaxy A56",
+          "name_ar": "سامسونج جالاكسي A56",
+          "category": "Smartphones",
+          "category_ar": "هواتف ذكية",
+          "price": 5990.0
+        },
+        "gaps": [
+          "Your price (5,990 EGP) is 72% below the observed market point 21,499 EGP [1].",
+          "Your price (5,990 EGP) is 75% below the observed market point 23,500 EGP [3]."
+        ],
+        "engine": "llm",
+        "queries": [
+          "Samsung Galaxy A56 price in Egypt EGP",
+          "Samsung Galaxy A56 competitors in Egyptian market",
+          "Samsung Galaxy A56 customer reviews in Egypt"
+        ],
+        "notes": [],
+        "matched_product": {
+          "matched_name": "Samsung Galaxy A56"
+        }
+      }
+    },
+    {
+      "id": 35,
+      "product": "Samsung Galaxy A56 price?",
+      "engine": "llm",
+      "created_at": "2026-07-28T17:10:42.103828",
+      "report": {
+        "product": "Samsung Galaxy A56 price?",
+        "summary_en": "The Samsung Galaxy A56 is available in Egypt with prices ranging from EGP 18,000 to 23,500 [3] and a best price of EGP 21,499 at noon with free shipping [1]. The retailer's internal data shows a price of 5990.0 EGP, which is significantly lower than market prices [1][3]. The product is also available on Amazon Egypt [2].",
+        "summary_ar": "هاتف سامسونج جالاكسي A56 متوفر في مصر بسعر يتراوح بين 18,000 و 23,500 جنيه [3] وسعر أفضل يبلغ 21,499 جنيه عند منتصف الليل مع شحن مجاني [1]. بيانات التاجر الداخلية تظهر سعرًا يبلغ 5990.0 جنيه ، وهو أقل بكثير من أسعار السوق [1][3]. المنتج متوفر أيضًا على أمازون مصر [2].",
+        "price_landscape": [
+          {
+            "point": "21,499 EGP at noon",
+            "source_n": 1
+          },
+          {
+            "point": "18,000 to 23,500 EGP in Cairo",
+            "source_n": 3
+          }
+        ],
+        "competitors": [
+          {
+            "name": "noon",
+            "note": "offers free shipping",
+            "source_n": 1
+          },
+          {
+            "name": "Amazon Egypt",
+            "note": "offers 256GB variant",
+            "source_n": 2
+          },
+          {
+            "name": "dubizzle",
+            "note": "prices range from 18,000 to 23,500 EGP",
+            "source_n": 3
+          }
+        ],
+        "demand_signals": [],
+        "risks": [
+          "pricing significantly lower than market prices may lead to losses"
+        ],
+        "opportunities": [
+          "offering competitive pricing and free shipping may attract customers"
+        ],
+        "recommended_action": "do not stock at the internal price of 5990.0 EGP, consider pricing around 21,499 EGP",
+        "sources": [
+          {
+            "n": 1,
+            "url": "https://eg.pricena.com/a56",
+            "title": "A56 price Egypt"
+          },
+          {
+            "n": 2,
+            "url": "https://www.amazon.eg/a56",
+            "title": "A56 on Amazon Egypt"
+          },
+          {
+            "n": 3,
+            "url": "https://www.dubizzle.com.eg/a56",
+            "title": "A56 dubizzle"
+          }
+        ],
+        "confidence": 80,
+        "confidence_basis": "based on available market data and competitor pricing",
+        "internal_match": {
+          "id": "P001",
+          "name": "Samsung Galaxy A56",
+          "name_ar": "سامسونج جالاكسي A56",
+          "category": "Smartphones",
+          "category_ar": "هواتف ذكية",
+          "price": 5990.0
+        },
+        "gaps": [
+          "Your price (5,990 EGP) is 72% below the observed market point 21,499 EGP [1].",
+          "Your price (5,990 EGP) is 75% below the observed market point 23,500 EGP [3]."
+        ],
+        "engine": "llm",
+        "queries": [
+          "Samsung Galaxy A56 price in Egypt EGP",
+          "Samsung Galaxy A56 price comparison Egypt",
+          "Samsung Galaxy A56 reviews in Egypt EGP"
+        ],
+        "notes": [],
+        "matched_product": {
+          "matched_name": "Samsung Galaxy A56"
+        }
+      }
+    }
+  ],
+  "board_decisions": [
+    {
+      "id": 16,
+      "product_name": "Samsung Galaxy A56",
+      "context": "Product: Samsung Galaxy A56\nCategory: Smartphones | Brand: Samsung\nCost: 5100 EGP | Price: 5990 EGP | Margin: 14.1%\nLast 30 days: 32 units sold, 189883 EGP revenue, 26683 EGP profit\nCurrent stock: 120 units (reorder point: 25)\nSupplier: El Nour Supplies (reliability: 92%, lead time: 3 days)\nCompetitors in catalog: iPhone 16 Pro at 39990 EGP; Xiaomi Redmi Note 14 at 1800 EGP",
+      "verdict": "{'summary_en': 'mock ceo', 'summary_ar': 'ملخص تنفيذي زائف', 'action_items_en': ['a'], 'action_items_ar': ['أ']}",
+      "engine": "llm",
+      "created_at": "2026-07-28T17:10:46.055570",
+      "transcript": [
+        {
+          "role_en": "CFO",
+          "role_ar": "المدير المالي",
+          "color": "#3B82F6",
+          "analysis": "mock prose"
+        },
+        {
+          "role_en": "Marketing Director",
+          "role_ar": "مدير التسويق",
+          "color": "#10B981",
+          "analysis": "mock prose"
+        },
+        {
+          "role_en": "Inventory Manager",
+          "role_ar": "مدير المخزون",
+          "color": "#F59E0B",
+          "analysis": "mock prose"
+        },
+        {
+          "role_en": "CEO",
+          "role_ar": "الرئيس التنفيذي",
+          "color": "#0B1F3A",
+          "analysis": {
+            "summary_en": "mock ceo",
+            "summary_ar": "ملخص تنفيذي زائف",
+            "action_items_en": [
+              "a"
+            ],
+            "action_items_ar": [
+              "أ"
+            ]
+          },
+          "is_final": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "product_name": "Samsung Galaxy A56",
+      "context": "Product: Samsung Galaxy A56\nCategory: Smartphones | Brand: Samsung\nCost: 5100 EGP | Price: 5990 EGP | Margin: 14.1%\nLast 30 days: 32 units sold, 189883 EGP revenue, 26683 EGP profit\nCurrent stock: 120 units (reorder point: 25)\nSupplier: El Nour Supplies (reliability: 92%, lead time: 3 days)\nCompetitors in catalog: iPhone 16 Pro at 39990 EGP; Xiaomi Redmi Note 14 at 1800 EGP",
+      "verdict": "{'summary_en': 'mock ceo', 'summary_ar': 'ملخص تنفيذي زائف', 'action_items_en': ['a'], 'action_items_ar': ['أ']}",
+      "engine": "llm",
+      "created_at": "2026-07-28T17:10:37.614136",
+      "transcript": [
+        {
+          "role_en": "CFO",
+          "role_ar": "المدير المالي",
+          "color": "#3B82F6",
+          "analysis": "mock prose"
+        },
+        {
+          "role_en": "Marketing Director",
+          "role_ar": "مدير التسويق",
+          "color": "#10B981",
+          "analysis": "mock prose"
+        },
+        {
+          "role_en": "Inventory Manager",
+          "role_ar": "مدير المخزون",
+          "color": "#F59E0B",
+          "analysis": "mock prose"
+        },
+        {
+          "role_en": "CEO",
+          "role_ar": "الرئيس التنفيذي",
+          "color": "#0B1F3A",
+          "analysis": {
+            "summary_en": "mock ceo",
+            "summary_ar": "ملخص تنفيذي زائف",
+            "action_items_en": [
+              "a"
+            ],
+            "action_items_ar": [
+              "أ"
+            ]
+          },
+          "is_final": true
+        }
+      ]
+    }
+  ],
+  "metrics_snapshots": [
+    {
+      "id": 51,
+      "label": "auto",
+      "created_at": "2026-07-28T17:10:46.112311",
+      "snapshot": {
+        "kpis": {
+          "revenue": 658018,
+          "revenue_change": -39.1,
+          "profit": 126758,
+          "profit_change": -37.9,
+          "margin": 19.3,
+          "margin_change": 0.0,
+          "turnover": 4.4,
+          "turnover_change": 0.0
+        },
+        "top_sellers": [
+          {
+            "name": "iPhone 16 Pro",
+            "name_ar": "آيفون 16 برو",
+            "sold": 5,
+            "revenue": 199950,
+            "margin": 20
+          },
+          {
+            "name": "Samsung Galaxy A56",
+            "name_ar": "سامسونج جالاكسي A56",
+            "sold": 32,
+            "revenue": 189883,
+            "margin": 14
+          },
+          {
+            "name": "Xiaomi Redmi Note 14",
+            "name_ar": "شاومي ريدمي نوت 14",
+            "sold": 62,
+            "revenue": 108990,
+            "margin": 15
+          },
+          {
+            "name": "Anker PowerCore 20000",
+            "name_ar": "أنكر باوركور 20000",
+            "sold": 52,
+            "revenue": 74675,
+            "margin": 32
+          },
+          {
+            "name": "Samsung Galaxy Tab S10",
+            "name_ar": "سامسونج جالاكسي تاب S10",
+            "sold": 3,
+            "revenue": 44970,
+            "margin": 23
+          }
+        ],
+        "category_revenue": [
+          {
+            "category": "Accessories",
+            "category_ar": "إكسسوارات",
+            "revenue": 74675
+          },
+          {
+            "category": "Audio",
+            "category_ar": "صوتيات",
+            "revenue": 8400
+          },
+          {
+            "category": "Smartphones",
+            "category_ar": "هواتف ذكية",
+            "revenue": 498823
+          },
+          {
+            "category": "Tablets",
+            "category_ar": "تابلت",
+            "revenue": 44970
+          },
+          {
+            "category": "Wearables",
+            "category_ar": "أجهزة قابلة للارتداء",
+            "revenue": 31150
+          }
+        ],
+        "weekly_trend": [
+          {
+            "week": "2026-06-01/2026-06-07",
+            "revenue": 271321
+          },
+          {
+            "week": "2026-06-08/2026-06-14",
+            "revenue": 368893
+          },
+          {
+            "week": "2026-06-15/2026-06-21",
+            "revenue": 177010
+          },
+          {
+            "week": "2026-06-22/2026-06-28",
+            "revenue": 152073
+          },
+          {
+            "week": "2026-06-29/2026-07-05",
+            "revenue": 196640
+          },
+          {
+            "week": "2026-07-06/2026-07-12",
+            "revenue": 148893
+          },
+          {
+            "week": "2026-07-13/2026-07-19",
+            "revenue": 87825
+          },
+          {
+            "week": "2026-07-20/2026-07-26",
+            "revenue": 158170
+          }
+        ],
+        "slow_movers": [
+          {
+            "name": "Canon EOS R50",
+            "name_ar": "كانون EOS R50",
+            "days_no_sale": 119,
+            "stock": 3,
+            "tied_capital": 82500,
+            "lost_profit_egp": 0,
+            "recovery_suggestion": "Liquidate — discount 20-30% or bundle to clear"
+          },
+          {
+            "name": "HP LaserJet Pro M404",
+            "name_ar": "طابعة اتش بي ليزر جيت برو",
+            "days_no_sale": 119,
+            "stock": 8,
+            "tied_capital": 62400,
+            "lost_profit_egp": 0,
+            "recovery_suggestion": "Liquidate — discount 20-30% or bundle to clear"
+          },
+          {
+            "name": "Sony WH-1000XM6",
+            "name_ar": "سوني WH-1000XM6",
+            "days_no_sale": 55,
+            "stock": 5,
+            "tied_capital": 52500,
+            "lost_profit_egp": 6226,
+            "recovery_suggestion": "Run a 10-15% discount campaign for 2 weeks; reassess"
+          }
+        ],
+        "stock_risk": [
+          {
+            "name": "Xiaomi Redmi Note 14",
+            "name_ar": "شاومي ريدمي نوت 14",
+            "stock": 0,
+            "status": "out"
+          },
+          {
+            "name": "Sony WH-1000XM6",
+            "name_ar": "سوني WH-1000XM6",
+            "stock": 5,
+            "status": "critical"
+          }
+        ]
+      }
+    },
+    {
+      "id": 50,
+      "label": "auto",
+      "created_at": "2026-07-28T17:10:45.872924",
+      "snapshot": {
+        "kpis": {
+          "revenue": 658018,
+          "revenue_change": -39.1,
+          "profit": 126758,
+          "profit_change": -37.9,
+          "margin": 19.3,
+          "margin_change": 0.0,
+          "turnover": 4.4,
+          "turnover_change": 0.0
+        },
+        "top_sellers": [
+          {
+            "name": "iPhone 16 Pro",
+            "name_ar": "آيفون 16 برو",
+            "sold": 5,
+            "revenue": 199950,
+            "margin": 20
+          },
+          {
+            "name": "Samsung Galaxy A56",
+            "name_ar": "سامسونج جالاكسي A56",
+            "sold": 32,
+            "revenue": 189883,
+            "margin": 14
+          },
+          {
+            "name": "Xiaomi Redmi Note 14",
+            "name_ar": "شاومي ريدمي نوت 14",
+            "sold": 62,
+            "revenue": 108990,
+            "margin": 15
+          },
+          {
+            "name": "Anker PowerCore 20000",
+            "name_ar": "أنكر باوركور 20000",
+            "sold": 52,
+            "revenue": 74675,
+            "margin": 32
+          },
+          {
+            "name": "Samsung Galaxy Tab S10",
+            "name_ar": "سامسونج جالاكسي تاب S10",
+            "sold": 3,
+            "revenue": 44970,
+            "margin": 23
+          }
+        ],
+        "category_revenue": [
+          {
+            "category": "Accessories",
+            "category_ar": "إكسسوارات",
+            "revenue": 74675
+          },
+          {
+            "category": "Audio",
+            "category_ar": "صوتيات",
+            "revenue": 8400
+          },
+          {
+            "category": "Smartphones",
+            "category_ar": "هواتف ذكية",
+            "revenue": 498823
+          },
+          {
+            "category": "Tablets",
+            "category_ar": "تابلت",
+            "revenue": 44970
+          },
+          {
+            "category": "Wearables",
+            "category_ar": "أجهزة قابلة للارتداء",
+            "revenue": 31150
+          }
+        ],
+        "weekly_trend": [
+          {
+            "week": "2026-06-01/2026-06-07",
+            "revenue": 271321
+          },
+          {
+            "week": "2026-06-08/2026-06-14",
+            "revenue": 368893
+          },
+          {
+            "week": "2026-06-15/2026-06-21",
+            "revenue": 177010
+          },
+          {
+            "week": "2026-06-22/2026-06-28",
+            "revenue": 152073
+          },
+          {
+            "week": "2026-06-29/2026-07-05",
+            "revenue": 196640
+          },
+          {
+            "week": "2026-07-06/2026-07-12",
+            "revenue": 148893
+          },
+          {
+            "week": "2026-07-13/2026-07-19",
+            "revenue": 87825
+          },
+          {
+            "week": "2026-07-20/2026-07-26",
+            "revenue": 158170
+          }
+        ],
+        "slow_movers": [
+          {
+            "name": "Canon EOS R50",
+            "name_ar": "كانون EOS R50",
+            "days_no_sale": 119,
+            "stock": 3,
+            "tied_capital": 82500,
+            "lost_profit_egp": 0,
+            "recovery_suggestion": "Liquidate — discount 20-30% or bundle to clear"
+          },
+          {
+            "name": "HP LaserJet Pro M404",
+            "name_ar": "طابعة اتش بي ليزر جيت برو",
+            "days_no_sale": 119,
+            "stock": 8,
+            "tied_capital": 62400,
+            "lost_profit_egp": 0,
+            "recovery_suggestion": "Liquidate — discount 20-30% or bundle to clear"
+          },
+          {
+            "name": "Sony WH-1000XM6",
+            "name_ar": "سوني WH-1000XM6",
+            "days_no_sale": 55,
+            "stock": 5,
+            "tied_capital": 52500,
+            "lost_profit_egp": 6226,
+            "recovery_suggestion": "Run a 10-15% discount campaign for 2 weeks; reassess"
+          }
+        ],
+        "stock_risk": [
+          {
+            "name": "Xiaomi Redmi Note 14",
+            "name_ar": "شاومي ريدمي نوت 14",
+            "stock": 0,
+            "status": "out"
+          },
+          {
+            "name": "Sony WH-1000XM6",
+            "name_ar": "سوني WH-1000XM6",
+            "stock": 5,
+            "status": "critical"
+          }
+        ]
+      }
+    }
+  ],
+  "exported_at": "2026-07-28T17:10:46.134320"
+}

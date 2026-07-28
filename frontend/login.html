@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <style>
+    .login-page {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #0B1F3A 0%, #12305B 55%, #0E4A5A 100%);
+      padding: 24px; position: relative; overflow: hidden;
+    }
+    .login-page::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(0,166,166,0.12) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .login-card {
+      position: relative; width: 100%; max-width: 400px;
+      background: var(--bg-card); border-radius: var(--radius-lg);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35); padding: 40px 36px;
+    }
+    .login-brand { text-align: center; margin-bottom: 28px; }
+    .login-brand .logo-icon {
+      width: 52px; height: 52px; background: var(--teal); border-radius: 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 1.25rem; margin-bottom: 12px;
+    }
+    .login-brand h1 { font-size: 1.375rem; }
+    .login-brand p { color: var(--text-secondary); font-size: 0.8125rem; margin-top: 4px; }
+    .login-field { margin-bottom: 16px; }
+    .login-field label { display: block; font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; }
+    .login-error {
+      display: none; background: var(--danger-bg); color: var(--danger);
+      padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.8125rem;
+      margin-bottom: 16px;
+    }
+    .login-footer { text-align: center; margin-top: 20px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .login-lang { position: absolute; top: 20px; inset-inline-end: 20px; }
+    .login-lang .lang-toggle { background: rgba(255,255,255,0.12); }
+    .login-lang .lang-btn { color: rgba(255,255,255,0.8); }
+    .login-lang .lang-btn.active { background: white; color: var(--navy); }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-lang">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+      </div>
+    </div>
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="logo-icon">PQ</div>
+        <h1 data-i18n="app.name">ProductIQ</h1>
+        <p data-i18n="auth.subtitle">Sign in to your retail decision engine</p>
+      </div>
+      <div class="login-error" id="loginError"></div>
+      <form id="loginForm">
+        <div class="login-field">
+          <label data-i18n="auth.username">Username</label>
+          <input type="text" id="username" autocomplete="username" required>
+        </div>
+        <div class="login-field">
+          <label data-i18n="auth.password">Password</label>
+          <input type="password" id="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="loginBtn" data-i18n="auth.signin">Sign In</button>
+      </form>
+      <div class="login-footer">
+        <a href="index.html" data-i18n="auth.backHome">← Back to home</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = document.getElementById('loginError');
+      const btn = document.getElementById('loginBtn');
+      err.style.display = 'none';
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('username').value.trim(),
+            password: document.getElementById('password').value
+          })
+        });
+        const data = await r.json();
+        if (r.ok && data.ok) {
+          window.location.href = 'dashboard.html';
+        } else {
+          err.textContent = I18n.lang === 'ar' ? 'بيانات الدخول غير صحيحة' : 'Invalid username or password';
+          err.style.display = 'block';
+        }
+      } catch {
+        err.textContent = I18n.lang === 'ar' ? 'الخادم غير متاح' : 'Server unavailable';
+        err.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

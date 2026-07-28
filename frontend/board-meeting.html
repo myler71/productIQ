@@ -48,31 +48,34 @@
 </head>
 <body>
   <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-brand">
+    <nav class="topbar">
+      <div class="brand">
         <div class="logo-icon">PQ</div>
         <div>
-          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
-          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+          <span class="brand-name" data-i18n="app.name">ProductIQ</span>
+          <span class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</span>
         </div>
       </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
-          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
-          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
-          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+      <div class="nav-links">
+        <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-dot"></span><span data-i18n="nav.home">Home</span></button>
+        <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-dot"></span><span data-i18n="nav.upload">Upload</span></button>
+        <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-dot"></span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-dot"></span><span data-i18n="nav.dna">Product DNA</span></button>
+        <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-dot"></span><span data-i18n="nav.report">CEO Report</span></button>
+        <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-dot"></span><span data-i18n="nav.simulator">Simulator</span></button>
+        <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-dot"></span><span data-i18n="nav.board">Board Meeting</span></button>
+        <button class="nav-item" data-page="research" data-href="research.html"><span class="nav-dot"></span><span data-i18n="nav.research">Research</span></button>
+        <button class="nav-item" data-page="history" data-href="history.html"><span class="nav-dot"></span><span data-i18n="nav.history">History</span></button>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
         </div>
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
-          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
-          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
-          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
-          <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-icon">🏛️</span><span data-i18n="nav.board">Board Meeting</span></button>
-        </div>
-      </nav>
-    </aside>
-    <div class="sidebar-overlay"></div>
+        <div id="userMenu" class="user-menu"></div>
+        <button class="hamburger" aria-label="Menu">☰</button>
+      </div>
+    </nav>
 
     <div class="main-content">
       <header class="top-header">
@@ -83,12 +86,7 @@
             <div class="header-breadcrumb" data-i18n="board.subtitle">Four executives. One decision.</div>
           </div>
         </div>
-        <div class="header-right">
-          <div class="lang-toggle">
-            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
-            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
-          </div>
-        </div>
+        <div class="header-right"></div>
       </header>
 
       <main class="page-content">
@@ -100,13 +98,23 @@
               <select id="boardProduct"></select>
             </div>
             <div>
-              <button class="btn btn-gold btn-lg" id="startBtn">🏛️ <span data-i18n="board.start">Start Board Meeting</span></button>
+              <button class="btn btn-gold btn-lg" id="startBtn"><span data-i18n="board.start">Start Board Meeting</span></button>
             </div>
           </div>
         </div>
 
         <!-- Meeting output -->
         <div id="meetingOutput" style="display:none; max-width:860px; margin:0 auto">
+          <div class="flex-between mb-2">
+            <h3>Meeting Transcript</h3>
+            <div id="engineBadge"></div>
+          </div>
+          <div class="card mb-3" id="financialPanel" style="display:none">
+            <div class="card-header"><h3>Case Financials</h3></div>
+            <div class="card-body">
+              <div class="grid-4" id="finGrid"></div>
+            </div>
+          </div>
           <div id="agentCards"></div>
           <div class="card" style="margin-top:24px">
             <div class="card-header"><h3 data-i18n="board.context">Case file reviewed by the board</h3></div>
@@ -121,29 +129,71 @@
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
   <script>
-    App.initSidebar('board');
+    App.initNav('board');
+    App.initConnectionBanner();
     let products = [];
     const ar = () => I18n.lang === 'ar';
 
     async function loadProducts() {
-      products = await Api.getProductList();
-      document.getElementById('boardProduct').innerHTML = products.map(p =>
-        `<option value="${p.id}">${ar() && p.name_ar ? p.name_ar : p.name}</option>`).join('');
+      try {
+        products = await Api.getProductList();
+        if (!products || !products.length) { products = []; return; }
+        document.getElementById('boardProduct').innerHTML = products.map(p =>
+          `<option value="${p.id}">${ar() && p.name_ar ? p.name_ar : p.name}</option>`).join('');
+      } catch (e) { products = []; }
     }
+
+    let health = { available: false, last_error: '' };
+    App.checkHealth().then(h => { health = h; }).catch(() => {});
 
     document.getElementById('startBtn').addEventListener('click', async () => {
       const pid = document.getElementById('boardProduct').value;
       App.showLoading(true);
       const res = await Api.boardMeeting(pid, I18n.lang);
       App.showLoading(false);
+      document.getElementById('engineBadge').innerHTML = App.engineBadge(res.engine, health.last_error);
       renderMeeting(res);
     });
 
-    const AGENT_ICONS = { 'CFO': '💰', 'Marketing Director': '📈', 'Inventory Manager': '📦', 'CEO': '🧠' };
+    const AGENT_INITIALS = { 'CFO': 'CF', 'Marketing Director': 'MK', 'Inventory Manager': 'IN', 'CEO': 'CE' };
+
+    function parseFinMetrics(ctx) {
+      const m = {};
+      const match = (re) => { const r = re.exec(ctx); return r ? r[1] : null; };
+      m.margin = match(/Margin:\s*([\d.]+)%/);
+      m.price = match(/Price:\s*([\d,]+)\s*EGP/);
+      m.cost = match(/Cost:\s*([\d,]+)\s*EGP/);
+      m.revenue = match(/([\d,]+)\s*EGP\s*revenue/);
+      m.profit = match(/([\d,]+)\s*EGP\s*profit/);
+      m.stock = match(/Current stock:\s*(\d+)/);
+      return m;
+    }
+
+    function renderFinancialPanel(fin) {
+      const panel = document.getElementById('financialPanel');
+      if (!fin.margin && !fin.revenue) { panel.style.display = 'none'; return; }
+      panel.style.display = 'block';
+      const cells = [
+        { label: 'Margin', value: fin.margin ? fin.margin + '%' : '--' },
+        { label: 'Revenue (30d)', value: fin.revenue ? App.egp(parseInt(fin.revenue.replace(/,/g, ''))) : '--' },
+        { label: 'Profit (30d)', value: fin.profit ? App.egp(parseInt(fin.profit.replace(/,/g, ''))) : '--' },
+        { label: 'Stock', value: fin.stock || '--' },
+      ];
+      document.getElementById('finGrid').innerHTML = cells.map(c =>
+        `<div class="stat-card" style="padding:14px;text-align:center">
+          <div class="kpi-label">${c.label}</div>
+          <div class="kpi-value" style="font-size:1.2rem">${c.value}</div>
+        </div>`
+      ).join('');
+    }
 
     function renderMeeting(res) {
       if (!res || !res.transcript) return;
       document.getElementById('meetingOutput').style.display = 'block';
+
+      const fin = parseFinMetrics(res.context || '');
+      renderFinancialPanel(fin);
+
       const wrap = document.getElementById('agentCards');
       wrap.innerHTML = '';
 
@@ -152,10 +202,10 @@
         const card = document.createElement('div');
         card.className = 'agent-card' + (agent.is_final ? ' final' : '');
         card.style.animationDelay = (i * 0.35) + 's';
-        const icon = AGENT_ICONS[agent.role_en] || '🤖';
+        const init = AGENT_INITIALS[agent.role_en] || '--';
         card.innerHTML = `
           <div class="agent-head">
-            <div class="agent-avatar" style="background:${agent.color}">${icon}</div>
+            <div class="agent-avatar" style="background:${agent.color}">${init}</div>
             <div>
               <div class="agent-role">${roleName}</div>
               <div class="agent-tag">ProductIQ Board</div>

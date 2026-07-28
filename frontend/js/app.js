@@ -23,8 +23,8 @@ const App = {
     return I18n.lang === 'ar' && obj.category_ar ? obj.category_ar : obj.category;
   },
 
-  /* Sidebar wiring (all pages share the same structure) */
-  initSidebar(activeId) {
+  /* Top navigation wiring (all pages share the same topbar structure) */
+  initNav(activeId) {
     document.querySelectorAll('.nav-item[data-page]').forEach(item => {
       item.classList.toggle('active', item.dataset.page === activeId);
       item.addEventListener('click', () => {
@@ -32,19 +32,33 @@ const App = {
         if (href) window.location.href = href;
       });
     });
-    const burger = document.querySelector('.hamburger');
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
-    if (burger && sidebar) {
-      burger.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-        if (overlay) overlay.classList.toggle('show');
-      });
-      if (overlay) overlay.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('show');
-      });
+    const burger = document.querySelector('.topbar .hamburger');
+    const links = document.querySelector('.topbar .nav-links');
+    if (burger && links) {
+      burger.addEventListener('click', () => links.classList.toggle('open'));
     }
+    this.initUserMenu();
+  },
+
+  /* User menu in the topbar: shows username + logout when authenticated,
+     otherwise a Login link. Filled from /api/auth/me. */
+  async initUserMenu() {
+    const slot = document.getElementById('userMenu');
+    if (!slot) return;
+    try {
+      const r = await fetch('/api/auth/me');
+      const data = await r.json();
+      if (data.authenticated) {
+        slot.innerHTML = `<span class="user-name">${data.username}</span>
+          <button class="btn btn-ghost btn-sm" id="logoutBtn" style="color:var(--text-on-dark)">${I18n.t('auth.signout')}</button>`;
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+          await fetch('/api/auth/logout', { method: 'POST' });
+          window.location.reload();
+        });
+      } else {
+        slot.innerHTML = `<a href="login.html" class="btn btn-outline btn-sm" style="color:white;border-color:rgba(255,255,255,0.4)">${I18n.t('auth.login')}</a>`;
+      }
+    } catch { /* server down — leave the slot empty */ }
   },
 
   /* Loading overlay */
@@ -85,5 +99,58 @@ const App = {
     };
     const m = map[level] || map.medium;
     return `<span class="badge ${m.cls}">${I18n.lang === 'ar' ? m.ar : m.en}</span>`;
+  },
+
+  /* AI provenance badge */
+  engineBadge(engine, lastError = '') {
+    const labels = {
+      llm: {
+        en: { text: 'AI-generated', cls: 'badge-success' },
+        ar: { text: 'مولّد بالذكاء الاصطناعي', cls: 'badge-success' }
+      },
+      deterministic: {
+        en: { text: 'Rule-based (LLM offline)', cls: 'badge' },
+        ar: { text: 'قواعد محددة (الذكاء غير متصل)', cls: 'badge' }
+      },
+      'deterministic+llm': {
+        en: { text: 'Computed, AI-explained', cls: 'badge-info' },
+        ar: { text: 'محسوب، موضّح بالذكاء', cls: 'badge-info' }
+      }
+    };
+    const entry = labels[engine] || labels.deterministic;
+    const l = I18n.lang === 'ar' ? entry.ar : entry.en;
+    const tooltip = lastError ? `title="${lastError.replace(/"/g, '&quot;')}"` : '';
+    return `<span class="badge ${l.cls}" ${tooltip}>${l.text}</span>`;
+  },
+
+  /* Connection / demo-mode banner */
+  initConnectionBanner() {
+    if (document.getElementById('piq-connection-banner')) return;
+    fetch('/api/health', { credentials: 'include' })
+      .then(r => r.json())
+      .then(data => {
+        const status = data.llm || {};
+        if (!status.available) {
+          const banner = document.createElement('div');
+          banner.id = 'piq-connection-banner';
+          const msg = I18n.lang === 'ar'
+            ? `الذكاء الاصطناعي غير متصل: ${status.last_error || 'مفتاح GROQ_API_KEY غير مضبوط'}. العمل قواعد محددة.`
+            : `AI offline: ${status.last_error || 'GROQ_API_KEY not set'}. Running rule-based.`;
+          banner.style.cssText = 'background:var(--danger-bg);color:var(--danger);padding:10px 16px;text-align:center;font-size:0.8125rem;font-weight:500;border-bottom:1px solid rgba(239,68,68,0.2);';
+          banner.textContent = msg;
+          document.body.insertBefore(banner, document.body.firstChild);
+        }
+      })
+      .catch(() => {});
+  },
+
+  async checkHealth() {
+    try {
+      const r = await fetch('/api/health', { credentials: 'include' });
+      const d = await r.json();
+      return d.llm || { available: false, last_error: 'unknown' };
+    } catch {
+      return { available: false, last_error: 'server unreachable' };
+    }
   }
 };

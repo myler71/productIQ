@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market Research — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .chat-wrap { max-width: 900px; margin: 0 auto; }
+    .chat-transcript {
+      min-height: 200px; max-height: 480px; overflow-y: auto;
+      padding: 20px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .bubble { max-width: 82%; padding: 12px 16px; border-radius: 14px; font-size: 0.9rem; line-height: 1.65; }
+    .bubble.user {
+      align-self: flex-end; background: var(--teal); color: white;
+      border-end-end-radius: 4px;
+    }
+    .bubble.assistant {
+      align-self: flex-start; background: var(--bg-card); border: 1px solid var(--border);
+      border-end-start-radius: 4px;
+    }
+    .research-steps { display: flex; gap: 8px; align-items: center; padding: 10px 16px; }
+    .research-steps .step {
+      padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 600;
+      background: var(--border-light); color: var(--text-light);
+    }
+    .research-steps .step.active { background: var(--teal-light); color: var(--teal); }
+    .citation-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .citation-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600;
+      background: var(--info-bg); color: var(--info); text-decoration: none;
+      border: 1px solid rgba(59,130,246,0.25);
+    }
+    .citation-chip:hover { background: rgba(59,130,246,0.2); }
+    .report-section { margin-bottom: 18px; }
+    .report-section h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 8px; }
+    .fact-row { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 0.875rem; }
+    .fact-row .src { flex-shrink: 0; }
+    .gap-alert { padding: 12px 16px; background: var(--gold-light); border-radius: 10px; margin-bottom: 8px; font-size: 0.875rem; color: #92610a; border-inline-start: 3px solid var(--gold); }
+    .internal-card { background: var(--teal-light); border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
+    .internal-card .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--teal); font-weight: 700; }
+    .chat-input-row { display: flex; gap: 10px; padding: 16px 20px; border-top: 1px solid var(--border); }
+    .research-unavailable { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <nav class="topbar">
+      <div class="brand">
+        <div class="logo-icon">PQ</div>
+        <div>
+          <span class="brand-name" data-i18n="app.name">ProductIQ</span>
+          <span class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-dot"></span><span data-i18n="nav.home">Home</span></button>
+        <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-dot"></span><span data-i18n="nav.upload">Upload</span></button>
+        <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-dot"></span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-dot"></span><span data-i18n="nav.dna">Product DNA</span></button>
+        <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-dot"></span><span data-i18n="nav.report">CEO Report</span></button>
+        <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-dot"></span><span data-i18n="nav.simulator">Simulator</span></button>
+        <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-dot"></span><span data-i18n="nav.board">Board Meeting</span></button>
+        <button class="nav-item" data-page="research" data-href="research.html"><span class="nav-dot"></span><span data-i18n="nav.research">Research</span></button>
+        <button class="nav-item" data-page="history" data-href="history.html"><span class="nav-dot"></span><span data-i18n="nav.history">History</span></button>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+        </div>
+        <div id="userMenu" class="user-menu"></div>
+        <button class="hamburger" aria-label="Menu">☰</button>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <div>
+            <div class="header-title" data-i18n="research.title">Market Research</div>
+            <div class="header-breadcrumb" data-i18n="research.subtitle">Ask about any product — live web intelligence with citations.</div>
+          </div>
+        </div>
+        <div class="header-right"><div id="engineBadge"></div></div>
+      </header>
+
+      <main class="page-content">
+        <div class="chat-wrap">
+          <div class="card">
+            <div class="chat-transcript" id="transcript">
+              <div class="bubble assistant" id="welcomeBubble">
+                <span data-i18n="research.welcome">Ask me about a product — e.g. "Samsung Galaxy A56 price" or "Should I stock the Redmi Note 14?" I'll search the live web and cross-reference your inventory.</span>
+              </div>
+            </div>
+            <div class="research-steps" id="stepsRow" style="display:none">
+              <span class="step" data-step="planning"><span data-i18n="research.step.plan">Planning</span></span>
+              <span class="step" data-step="searching"><span data-i18n="research.step.search">Searching</span></span>
+              <span class="step" data-step="analysing"><span data-i18n="research.step.analyse">Analysing</span></span>
+            </div>
+            <div class="chat-input-row">
+              <input type="text" id="chatInput" data-i18n-ph="research.placeholder" placeholder="Ask about a product..." style="flex:1">
+              <button class="btn btn-primary" id="sendBtn" data-i18n="research.send">Research</button>
+            </div>
+          </div>
+
+          <div id="reportArea" style="display:none" class="mt-3">
+            <div class="card mb-3">
+              <div class="card-header">
+                <h3 id="reportTitle">—</h3>
+                <button class="btn btn-outline btn-sm" id="exportBtn"><span data-i18n="btn.download">Export</span></button>
+              </div>
+              <div class="card-body" id="reportBody"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    App.initNav('research');
+    App.initConnectionBanner();
+    const sessionId = 'web-' + (localStorage.getItem('piq-research-sid') || (() => {
+      const s = Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('piq-research-sid', s); return s;
+    })());
+    const ar = () => I18n.lang === 'ar';
+    let lastReport = null;
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+
+    function addBubble(text, who, sources) {
+      const t = document.getElementById('transcript');
+      const b = document.createElement('div');
+      b.className = 'bubble ' + who;
+      b.innerHTML = esc(text);
+      if (sources && sources.length) {
+        const chips = document.createElement('div');
+        chips.className = 'citation-chips';
+        sources.forEach(s => {
+          const a = document.createElement('a');
+          a.className = 'citation-chip'; a.href = s.url; a.target = '_blank'; a.rel = 'noopener';
+          a.textContent = `[${s.n}] ${s.title ? s.title.slice(0, 28) : s.url.slice(0, 28)}`;
+          a.title = s.url;
+          chips.appendChild(a);
+        });
+        b.appendChild(chips);
+      }
+      t.appendChild(b);
+      t.scrollTop = t.scrollHeight;
+      return b;
+    }
+
+    function setStep(active) {
+      document.querySelectorAll('.research-steps .step').forEach(s => {
+        s.classList.toggle('active', s.dataset.step === active);
+      });
+    }
+
+    function renderReport(rep) {
+      lastReport = rep;
+      document.getElementById('reportArea').style.display = 'block';
+      document.getElementById('reportTitle').textContent = rep.product;
+      let html = '';
+
+      if (rep.internal_match) {
+        html += `<div class="internal-card">
+          <div class="label">${ar() ? 'بياناتك الداخلية' : 'Your data'}</div>
+          <strong>${esc(rep.internal_match.name)}</strong> —
+          ${App.egp(rep.internal_match.price)} · ${esc(rep.internal_match.category)}
+        </div>`;
+      }
+      (rep.gaps || []).forEach(g => { html += `<div class="gap-alert">${esc(g)}</div>`; });
+
+      html += `<div class="report-section"><h4>${ar() ? 'الملخص' : 'Summary'}</h4>
+        <p style="line-height:1.75;font-size:0.9rem">${esc(ar() ? rep.summary_ar : rep.summary_en)}</p></div>`;
+
+      const sec = (title, items, render) => {
+        if (!items || !items.length) return;
+        html += `<div class="report-section"><h4>${title}</h4>` + items.map(render).join('') + '</div>';
+      };
+      const chip = n => rep.sources[n - 1]
+        ? `<a class="citation-chip src" href="${rep.sources[n-1].url}" target="_blank" rel="noopener">[${n}]</a>` : '';
+      sec(ar() ? 'الأسعار في السوق' : 'Price landscape', rep.price_landscape,
+        i => `<div class="fact-row">${chip(i.source_n)}<span>${esc(i.point)}</span></div>`);
+      sec(ar() ? 'المنافسون' : 'Competitors', rep.competitors,
+        i => `<div class="fact-row">${chip(i.source_n)}<span><strong>${esc(i.name)}</strong> — ${esc(i.note)}</span></div>`);
+      sec(ar() ? 'إشارات الطلب' : 'Demand signals', rep.demand_signals,
+        i => `<div class="fact-row">${chip(i.source_n)}<span>${esc(i.signal)}</span></div>`);
+      sec(ar() ? 'المخاطر' : 'Risks', rep.risks, i => `<div class="fact-row"><span>${esc(i)}</span></div>`);
+      sec(ar() ? 'الفرص' : 'Opportunities', rep.opportunities, i => `<div class="fact-row"><span>${esc(i)}</span></div>`);
+
+      if (rep.recommended_action) {
+        html += `<div class="report-section"><h4>${ar() ? 'الإجراء الموصى به' : 'Recommended action'}</h4>
+          <div style="padding:12px 16px;background:var(--teal-light);border-radius:10px;font-weight:600">${esc(rep.recommended_action)}</div></div>`;
+      }
+      html += `<div class="confidence-meter">
+        <span class="meter-label" data-i18n="common.confidence">Confidence</span>
+        <div class="meter-bar"><div class="meter-fill" style="width:${rep.confidence}%"></div></div>
+        <strong>${rep.confidence}%</strong></div>
+        <div style="font-size:0.75rem;color:var(--text-light);margin-top:6px">${esc(rep.confidence_basis || '')}</div>`;
+      if (rep.sources && rep.sources.length) {
+        html += `<div class="report-section mt-2"><h4 data-i18n="research.sources">Sources</h4><div class="citation-chips">` +
+          rep.sources.map(s => `<a class="citation-chip" href="${s.url}" target="_blank" rel="noopener">[${s.n}] ${esc((s.title || s.url).slice(0, 40))}</a>`).join('') +
+          '</div></div>';
+      }
+      document.getElementById('reportBody').innerHTML = html;
+    }
+
+    async function send() {
+      const input = document.getElementById('chatInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = '';
+      addBubble(msg, 'user');
+      document.getElementById('stepsRow').style.display = 'flex';
+      setStep('planning');
+      const thinking = addBubble('…', 'assistant');
+      const steps = ['planning', 'searching', 'analysing'];
+      let si = 0;
+      const stepTimer = setInterval(() => { si = (si + 1) % steps.length; setStep(steps[si]); }, 1400);
+      try {
+        const r = await fetch('/api/research/chat', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId, message: msg, lang: I18n.lang })
+        });
+        const data = await r.json();
+        clearInterval(stepTimer);
+        document.getElementById('stepsRow').style.display = 'none';
+        const reply = data.reply || {};
+        thinking.innerHTML = esc(ar() ? reply.content_ar : reply.content_en);
+        if (reply.sources && reply.sources.length) {
+          const chips = document.createElement('div');
+          chips.className = 'citation-chips';
+          reply.sources.forEach(s => {
+            const a = document.createElement('a');
+            a.className = 'citation-chip'; a.href = s.url; a.target = '_blank'; a.rel = 'noopener';
+            a.textContent = `[${s.n}]`;
+            a.title = s.title || s.url;
+            chips.appendChild(a);
+          });
+          thinking.appendChild(chips);
+        }
+        const health = await App.checkHealth();
+        document.getElementById('engineBadge').innerHTML = App.engineBadge(data.engine, health.last_error);
+        if (data.report) renderReport(data.report);
+      } catch (e) {
+        clearInterval(stepTimer);
+        document.getElementById('stepsRow').style.display = 'none';
+        thinking.textContent = I18n.t('common.error');
+      }
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', send);
+    document.getElementById('chatInput').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      if (!lastReport) return;
+      const blob = new Blob([JSON.stringify(lastReport, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `productiq-research-${lastReport.product.replace(/\s+/g, '-')}.json`;
+      a.click();
+    });
+  </script>
+</body>
+</html>

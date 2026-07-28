@@ -7,32 +7,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/arabic.css">
   <style>
-    .landing-nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(11,31,58,0.92); backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    body[dir="rtl"] .landing-nav { left: 0; right: 0; }
-    .landing-nav-inner {
-      max-width: 1200px; margin: 0 auto; padding: 14px 24px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 10px; color: white; }
-    .nav-logo .logo-icon {
-      width: 34px; height: 34px; background: var(--teal); border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; font-weight: 700;
-    }
-    .nav-actions { display: flex; align-items: center; gap: 12px; }
-    .landing-nav .lang-toggle { background: rgba(255,255,255,0.1); }
-    .landing-nav .lang-btn { color: rgba(255,255,255,0.7); }
-    .landing-nav .lang-btn.active { background: white; color: var(--navy); }
-
     .hero {
-      min-height: 92vh; display: flex; align-items: center; justify-content: center;
+      min-height: 88vh; display: flex; align-items: center; justify-content: center;
       background: linear-gradient(160deg, #0B1F3A 0%, #12305B 55%, #0E4A5A 100%);
-      position: relative; overflow: hidden; text-align: center; padding: 120px 24px 80px;
+      position: relative; overflow: hidden; text-align: center; padding: 80px 24px;
     }
     .hero::before {
       content: ''; position: absolute; inset: 0;
@@ -82,6 +64,12 @@
       display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
       background: var(--teal-light);
     }
+    .feature-num {
+      width: 52px; height: 52px; border-radius: 12px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800; letter-spacing: 0.02em;
+      background: var(--teal-light); color: var(--teal);
+    }
     .feature-card h3 { margin-bottom: 10px; font-size: 1.125rem; }
     .feature-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.65; }
 
@@ -100,28 +88,40 @@
   </style>
 </head>
 <body>
-  <nav class="landing-nav">
-    <div class="landing-nav-inner">
-      <div class="nav-logo">
-        <div class="logo-icon">PQ</div>
-        <div>
-          <div style="font-weight:700" data-i18n="app.name">ProductIQ</div>
-        </div>
+  <nav class="topbar">
+    <div class="brand">
+      <div class="logo-icon">PQ</div>
+      <div>
+        <span class="brand-name" data-i18n="app.name">ProductIQ</span>
+        <span class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</span>
       </div>
-      <div class="nav-actions">
-        <div class="lang-toggle">
-          <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
-          <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
-        </div>
-        <a href="upload.html" class="btn btn-primary btn-sm" data-i18n="btn.getStarted">Get Started</a>
+    </div>
+    <div class="nav-links">
+      <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-dot"></span><span data-i18n="nav.home">Home</span></button>
+      <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-dot"></span><span data-i18n="nav.upload">Upload</span></button>
+      <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-dot"></span><span data-i18n="nav.dashboard">Dashboard</span></button>
+      <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-dot"></span><span data-i18n="nav.dna">Product DNA</span></button>
+      <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-dot"></span><span data-i18n="nav.report">CEO Report</span></button>
+      <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-dot"></span><span data-i18n="nav.simulator">Simulator</span></button>
+      <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-dot"></span><span data-i18n="nav.board">Board Meeting</span></button>
+        <button class="nav-item" data-page="research" data-href="research.html"><span class="nav-dot"></span><span data-i18n="nav.research">Research</span></button>
+        <button class="nav-item" data-page="history" data-href="history.html"><span class="nav-dot"></span><span data-i18n="nav.history">History</span></button>
+    </div>
+    <div class="topbar-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
       </div>
+      <a href="upload.html" class="btn btn-primary btn-sm" data-i18n="btn.getStarted">Get Started</a>
+      <div id="userMenu" class="user-menu"></div>
+        <button class="hamburger" aria-label="Menu">☰</button>
     </div>
   </nav>
 
   <section class="hero">
     <div class="hero-glow"></div>
     <div class="hero-inner">
-      <div class="hero-badge">🇪🇬 <span data-i18n="landing.cta.title">Built for the Egyptian market</span></div>
+      <div class="hero-badge"><span data-i18n="landing.cta.title">Built for the Egyptian market</span></div>
       <h1 data-i18n="landing.hero.title">Turn Your Store Data Into Business Decisions</h1>
       <p data-i18n="landing.hero.subtitle">ProductIQ is an AI decision-support platform for Egyptian retailers.</p>
       <div class="hero-actions">
@@ -142,27 +142,27 @@
     </div>
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">📊</div>
+        <div class="feature-num">01</div>
         <h3 data-i18n="landing.f1.title">Core Analytics</h3>
         <p data-i18n="landing.f1.desc">Top sellers, slow movers, dead stock, turnover and margins.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🧬</div>
+        <div class="feature-num">02</div>
         <h3 data-i18n="landing.f2.title">Product DNA</h3>
         <p data-i18n="landing.f2.desc">Every product gets a visual fingerprint.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">📋</div>
+        <div class="feature-num">03</div>
         <h3 data-i18n="landing.f3.title">Weekly CEO Report</h3>
         <p data-i18n="landing.f3.desc">An executive summary your CEO would read.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🔮</div>
+        <div class="feature-num">04</div>
         <h3 data-i18n="landing.f4.title">What-If Simulator</h3>
         <p data-i18n="landing.f4.desc">Test price changes before you commit.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🏛️</div>
+        <div class="feature-num">05</div>
         <h3>AI Board Meeting</h3>
         <p>Four AI executives — CFO, Marketing, Inventory, CEO — debate your product and deliver a final verdict.</p>
       </div>
@@ -180,5 +180,7 @@
   </footer>
 
   <script src="js/i18n.js"></script>
+  <script src="js/app.js"></script>
+  <script>App.initNav('home');</script>
 </body>
 </html>

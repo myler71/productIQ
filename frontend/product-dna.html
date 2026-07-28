@@ -14,31 +14,34 @@
 </head>
 <body>
   <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-brand">
+    <nav class="topbar">
+      <div class="brand">
         <div class="logo-icon">PQ</div>
         <div>
-          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
-          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+          <span class="brand-name" data-i18n="app.name">ProductIQ</span>
+          <span class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</span>
         </div>
       </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
-          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
-          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
-          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+      <div class="nav-links">
+        <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-dot"></span><span data-i18n="nav.home">Home</span></button>
+        <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-dot"></span><span data-i18n="nav.upload">Upload</span></button>
+        <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-dot"></span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-dot"></span><span data-i18n="nav.dna">Product DNA</span></button>
+        <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-dot"></span><span data-i18n="nav.report">CEO Report</span></button>
+        <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-dot"></span><span data-i18n="nav.simulator">Simulator</span></button>
+        <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-dot"></span><span data-i18n="nav.board">Board Meeting</span></button>
+        <button class="nav-item" data-page="research" data-href="research.html"><span class="nav-dot"></span><span data-i18n="nav.research">Research</span></button>
+        <button class="nav-item" data-page="history" data-href="history.html"><span class="nav-dot"></span><span data-i18n="nav.history">History</span></button>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
         </div>
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
-          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
-          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
-          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
-          <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-icon">🏛️</span><span data-i18n="nav.board">Board Meeting</span></button>
-        </div>
-      </nav>
-    </aside>
-    <div class="sidebar-overlay"></div>
+        <div id="userMenu" class="user-menu"></div>
+        <button class="hamburger" aria-label="Menu">☰</button>
+      </div>
+    </nav>
 
     <div class="main-content">
       <header class="top-header">
@@ -49,12 +52,7 @@
             <div class="header-breadcrumb" data-i18n="dna.subtitle">A visual fingerprint for every product.</div>
           </div>
         </div>
-        <div class="header-right">
-          <div class="lang-toggle">
-            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
-            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
-          </div>
-        </div>
+        <div class="header-right"></div>
       </header>
 
       <main class="page-content">
@@ -102,7 +100,8 @@
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
   <script>
-    App.initSidebar('dna');
+    App.initNav('dna');
+    App.initConnectionBanner();
     const DIMS = ['popularity', 'margin', 'demand', 'risk', 'competitiveness', 'turnover', 'growth', 'value'];
     let radar = null, products = [], dnaA = null, dnaB = null;
 

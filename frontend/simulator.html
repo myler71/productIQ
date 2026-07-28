@@ -13,31 +13,34 @@
 </head>
 <body>
   <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-brand">
+    <nav class="topbar">
+      <div class="brand">
         <div class="logo-icon">PQ</div>
         <div>
-          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
-          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+          <span class="brand-name" data-i18n="app.name">ProductIQ</span>
+          <span class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</span>
         </div>
       </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
-          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
-          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
-          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+      <div class="nav-links">
+        <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-dot"></span><span data-i18n="nav.home">Home</span></button>
+        <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-dot"></span><span data-i18n="nav.upload">Upload</span></button>
+        <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-dot"></span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-dot"></span><span data-i18n="nav.dna">Product DNA</span></button>
+        <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-dot"></span><span data-i18n="nav.report">CEO Report</span></button>
+        <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-dot"></span><span data-i18n="nav.simulator">Simulator</span></button>
+        <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-dot"></span><span data-i18n="nav.board">Board Meeting</span></button>
+        <button class="nav-item" data-page="research" data-href="research.html"><span class="nav-dot"></span><span data-i18n="nav.research">Research</span></button>
+        <button class="nav-item" data-page="history" data-href="history.html"><span class="nav-dot"></span><span data-i18n="nav.history">History</span></button>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
         </div>
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
-          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
-          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
-          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
-          <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-icon">🏛️</span><span data-i18n="nav.board">Board Meeting</span></button>
-        </div>
-      </nav>
-    </aside>
-    <div class="sidebar-overlay"></div>
+        <div id="userMenu" class="user-menu"></div>
+        <button class="hamburger" aria-label="Menu">☰</button>
+      </div>
+    </nav>
 
     <div class="main-content">
       <header class="top-header">
@@ -48,12 +51,7 @@
             <div class="header-breadcrumb" data-i18n="sim.subtitle">Test a decision before you make it.</div>
           </div>
         </div>
-        <div class="header-right">
-          <div class="lang-toggle">
-            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
-            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
-          </div>
-        </div>
+        <div class="header-right"></div>
       </header>
 
       <main class="page-content">
@@ -78,14 +76,17 @@
               <input type="number" id="simValue" value="10" min="1" max="50">
             </div>
             <div>
-              <button class="btn btn-primary" id="simBtn">🔮 <span data-i18n="btn.simulate">Simulate</span></button>
+              <button class="btn btn-primary" id="simBtn"><span data-i18n="btn.simulate">Simulate</span></button>
             </div>
           </div>
         </div>
 
         <!-- Results -->
         <div id="simResults" style="display:none">
-          <h3 class="mb-2" data-i18n="sim.results.title">Simulation Results</h3>
+          <div class="flex-between mb-2">
+            <h3 data-i18n="sim.results.title">Simulation Results</h3>
+            <div id="engineBadge"></div>
+          </div>
           <div class="comparison-view mb-3">
             <div class="comparison-card before">
               <div class="comp-header"><h4 data-i18n="sim.results.before">Current</h4></div>
@@ -100,6 +101,15 @@
           </div>
 
           <div class="grid-3 mb-3" id="impactGrid"></div>
+
+          <div class="grid-2 mb-3" id="marginGrid" style="display:none"></div>
+
+          <div class="card mb-3" id="breakdownCard" style="display:none">
+            <div class="card-header"><h4 style="font-size:0.875rem">Profit Breakdown</h4></div>
+            <div class="card-body">
+              <div class="grid-3" id="breakdownGrid"></div>
+            </div>
+          </div>
 
           <div class="card">
             <div class="card-body">
@@ -127,15 +137,22 @@
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
   <script>
-    App.initSidebar('simulator');
+    App.initNav('simulator');
+    App.initConnectionBanner();
     let products = [];
     const ar = () => I18n.lang === 'ar';
 
     async function loadProducts() {
-      products = await Api.getProductList();
-      document.getElementById('simProduct').innerHTML = products.map(p =>
-        `<option value="${p.id}">${ar() && p.name_ar ? p.name_ar : p.name}</option>`).join('');
+      try {
+        products = await Api.getProductList();
+        if (!products || !products.length) { products = []; return; }
+        document.getElementById('simProduct').innerHTML = products.map(p =>
+          `<option value="${p.id}">${ar() && p.name_ar ? p.name_ar : p.name}</option>`).join('');
+      } catch (e) { products = []; }
     }
+
+    let health = { available: false, last_error: '' };
+    App.checkHealth().then(h => { health = h; }).catch(() => {});
 
     document.getElementById('simBtn').addEventListener('click', async () => {
       const pid = document.getElementById('simProduct').value;
@@ -155,6 +172,7 @@
 
     function render(res, payload) {
       document.getElementById('simResults').style.display = 'block';
+      document.getElementById('engineBadge').innerHTML = App.engineBadge(res.engine, health.last_error);
       const cur = payload.current_price;
       const isDecrease = payload.change_type.includes('decrease') || payload.change_type.includes('discount');
       const v = parseFloat(payload.change_value) || 0;
@@ -175,6 +193,35 @@
           <div class="kpi-value" style="color:${col(res.revenue_impact_egp)}">${sign(res.revenue_impact_egp)}${App.egp(Math.abs(res.revenue_impact_egp)).replace('EGP ', '').replace(' ج.م','')}</div></div>
         <div class="stat-card"><div class="kpi-label" data-i18n="sim.results.profit">${I18n.t('sim.results.profit')}</div>
           <div class="kpi-value" style="color:${col(res.profit_impact_egp)}">${sign(res.profit_impact_egp)}${App.egp(Math.abs(res.profit_impact_egp)).replace('EGP ', '').replace(' ج.م','')}</div></div>`;
+
+      // Margin comparison
+      const curMrg = res.current_margin_pct;
+      const projMrg = res.projected_margin_pct;
+      if (curMrg !== undefined && projMrg !== undefined) {
+        document.getElementById('marginGrid').style.display = 'grid';
+        const mrgCol = projMrg >= curMrg ? 'var(--success)' : 'var(--danger)';
+        document.getElementById('marginGrid').innerHTML = `
+          <div class="stat-card"><div class="kpi-label">Current Margin</div>
+            <div class="kpi-value">${curMrg}%</div></div>
+          <div class="stat-card"><div class="kpi-label">Projected Margin</div>
+            <div class="kpi-value" style="color:${mrgCol}">${projMrg}% ${sign(projMrg - curMrg)}${(projMrg - curMrg).toFixed(1)}pp</div></div>`;
+      }
+
+      // Profit breakdown
+      const pb = res.profit_breakdown;
+      if (pb) {
+        document.getElementById('breakdownCard').style.display = 'block';
+        document.getElementById('breakdownGrid').innerHTML = `
+          <div class="stat-card"><div class="kpi-label">Volume Effect</div>
+            <div class="kpi-value" style="color:${col(pb.volume_impact_egp)};font-size:0.95rem">${sign(pb.volume_impact_egp)}${App.egp(Math.abs(pb.volume_impact_egp)).replace('EGP ','').replace(' ج.م','')}</div>
+            <div style="font-size:0.7rem;color:var(--text-light)">from ${sign(res.demand_change_pct)}${Math.abs(res.demand_change_pct)}% demand change</div></div>
+          <div class="stat-card"><div class="kpi-label">Margin Effect</div>
+            <div class="kpi-value" style="color:${col(pb.margin_impact_egp)};font-size:0.95rem">${sign(pb.margin_impact_egp)}${App.egp(Math.abs(pb.margin_impact_egp)).replace('EGP ','').replace(' ج.م','')}</div>
+            <div style="font-size:0.7rem;color:var(--text-light)">from margin shift (${curMrg}% → ${projMrg}%)</div></div>
+          <div class="stat-card"><div class="kpi-label">Breakeven</div>
+            <div class="kpi-value" style="font-size:0.95rem">${res.breakeven_units || '--'} units/mo</div>
+            <div style="font-size:0.7rem;color:var(--text-light)">needed to match current profit</div></div>`;
+      }
 
       document.getElementById('riskBadge').innerHTML = App.riskBadge(res.risk_level);
       document.getElementById('confFill').style.width = res.confidence_pct + '%';

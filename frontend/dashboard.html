@@ -14,31 +14,34 @@
 </head>
 <body>
   <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-brand">
+    <nav class="topbar">
+      <div class="brand">
         <div class="logo-icon">PQ</div>
         <div>
-          <div class="brand-name" data-i18n="app.name">ProductIQ</div>
-          <div class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</div>
+          <span class="brand-name" data-i18n="app.name">ProductIQ</span>
+          <span class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</span>
         </div>
       </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.main">Main</div>
-          <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">Home</span></button>
-          <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-icon">📤</span><span data-i18n="nav.upload">Upload Data</span></button>
-          <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></button>
+      <div class="nav-links">
+        <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-dot"></span><span data-i18n="nav.home">Home</span></button>
+        <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-dot"></span><span data-i18n="nav.upload">Upload</span></button>
+        <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-dot"></span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-dot"></span><span data-i18n="nav.dna">Product DNA</span></button>
+        <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-dot"></span><span data-i18n="nav.report">CEO Report</span></button>
+        <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-dot"></span><span data-i18n="nav.simulator">Simulator</span></button>
+        <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-dot"></span><span data-i18n="nav.board">Board Meeting</span></button>
+        <button class="nav-item" data-page="research" data-href="research.html"><span class="nav-dot"></span><span data-i18n="nav.research">Research</span></button>
+        <button class="nav-item" data-page="history" data-href="history.html"><span class="nav-dot"></span><span data-i18n="nav.history">History</span></button>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
         </div>
-        <div class="nav-section">
-          <div class="nav-section-title" data-i18n="nav.section.ai">AI Intelligence</div>
-          <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-icon">🧬</span><span data-i18n="nav.dna">Product DNA</span></button>
-          <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-icon">📋</span><span data-i18n="nav.report">CEO Report</span></button>
-          <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-icon">🔮</span><span data-i18n="nav.simulator">Simulator</span></button>
-          <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-icon">🏛️</span><span data-i18n="nav.board">Board Meeting</span></button>
-        </div>
-      </nav>
-    </aside>
-    <div class="sidebar-overlay"></div>
+        <div id="userMenu" class="user-menu"></div>
+        <button class="hamburger" aria-label="Menu">☰</button>
+      </div>
+    </nav>
 
     <div class="main-content">
       <header class="top-header">
@@ -46,12 +49,7 @@
           <button class="hamburger">☰</button>
           <div class="header-title" data-i18n="dashboard.title">Dashboard</div>
         </div>
-        <div class="header-right">
-          <div class="lang-toggle">
-            <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
-            <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
-          </div>
-        </div>
+        <div class="header-right"></div>
       </header>
 
       <main class="page-content">
@@ -77,9 +75,12 @@
           </div>
           <!-- AI Recommendations -->
           <div class="card">
-            <div class="card-header"><h3>🤖 <span data-i18n="dashboard.ai.title">AI Recommendations</span></h3></div>
+            <div class="card-header">
+              <h3 data-i18n="dashboard.ai.title">AI Recommendations</h3>
+              <div id="engineBadge"></div>
+            </div>
             <div class="card-body" id="aiPanel" style="max-height:320px;overflow-y:auto">
-              <div class="empty-state" style="padding:24px"><div class="empty-icon">🤖</div></div>
+              <div class="empty-state" style="padding:24px"><p data-i18n="common.loading">Loading...</p></div>
             </div>
           </div>
         </div>
@@ -104,17 +105,17 @@
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
   <script>
-    App.initSidebar('dashboard');
+    App.initNav('dashboard');
     let charts = [];
 
-    function kpiCard(labelKey, value, change, icon, invert = false) {
+    function kpiCard(labelKey, value, change, abbr, invert = false) {
       const up = change >= 0;
       const good = invert ? !up : up;
       return `<div class="stat-card">
         <div class="stat-header">
           <div><div class="kpi-label" data-i18n="${labelKey}">${I18n.t(labelKey)}</div>
           <div class="kpi-value">${value}</div></div>
-          <div class="stat-icon" style="background:var(--teal-light)">${icon}</div>
+          <div class="kpi-abbr" style="background:var(--teal-light)">${abbr}</div>
         </div>
         <div class="kpi-change ${good ? 'up' : 'down'}">${up ? '▲' : '▼'} ${Math.abs(change)}% ${I18n.t('common.vsLast')}</div>
       </div>`;
@@ -122,10 +123,10 @@
 
     function renderKPIs(k) {
       document.getElementById('kpiGrid').innerHTML =
-        kpiCard('dashboard.kpi.revenue', App.egp(k.revenue), k.revenue_change, '💰') +
-        kpiCard('dashboard.kpi.profit', App.egp(k.profit), k.profit_change, '📈') +
-        kpiCard('dashboard.kpi.margin', k.margin + '%', k.margin_change, '🎯') +
-        kpiCard('dashboard.kpi.turnover', k.turnover + 'x', k.turnover_change * 100 / 10, '🔄');
+        kpiCard('dashboard.kpi.revenue', App.egp(k.revenue), k.revenue_change, 'Rev') +
+        kpiCard('dashboard.kpi.profit', App.egp(k.profit), k.profit_change, 'Prf') +
+        kpiCard('dashboard.kpi.margin', k.margin + '%', k.margin_change, 'Mrg') +
+        kpiCard('dashboard.kpi.turnover', k.turnover + 'x', k.turnover_change * 100 / 10, 'Trn');
     }
 
     function renderCharts(data) {
@@ -141,10 +142,14 @@
     }
 
     function renderTables(data) {
-      const slow = data.slow_movers.map(p => `<tr>
-        <td><strong>${I18n.lang === 'ar' ? p.name_ar : p.name}</strong></td>
-        <td>${p.days_no_sale} <span data-i18n="dashboard.col.days">${I18n.t('dashboard.col.days')}</span></td>
-        <td>${p.stock}</td><td>${App.egp(p.tied_capital)}</td></tr>`).join('');
+      const slow = data.slow_movers.map(p => {
+        const lost = p.lost_profit_egp ? `<br><span style="font-size:0.75rem;color:var(--danger)">-${App.egp(p.lost_profit_egp)} lost</span>` : '';
+        const suggestion = p.recovery_suggestion ? `<span style="font-size:0.7rem;color:var(--text-light);display:block;margin-top:2px">${p.recovery_suggestion}</span>` : '';
+        return `<tr>
+        <td><strong>${I18n.lang === 'ar' ? p.name_ar : p.name}</strong>${suggestion}</td>
+        <td>${p.days_no_sale} <span data-i18n="dashboard.col.days">${I18n.t('dashboard.col.days')}</span>${lost}</td>
+        <td>${p.stock}</td><td>${App.egp(p.tied_capital)}</td></tr>`;
+      }).join('');
       document.getElementById('slowTable').innerHTML =
         `<thead><tr><th>${I18n.t('dashboard.col.product')}</th><th>${I18n.t('dashboard.col.days')}</th>
         <th>${I18n.t('dashboard.col.stock')}</th><th>Capital</th></tr></thead><tbody>${slow}</tbody>`;
@@ -160,9 +165,8 @@
         <th>${I18n.t('dashboard.col.status')}</th></tr></thead><tbody>${stock}</tbody>`;
     }
 
-    async function renderAI() {
+    async function renderAI(recs, health) {
       const panel = document.getElementById('aiPanel');
-      const recs = await Api.getRecommendations(I18n.lang);
       const actionBadge = a => ({
         restock: 'badge-success', discount: 'badge-warning',
         bundle: 'badge-info', remove: 'badge-danger'
@@ -185,15 +189,19 @@
     }
 
     async function load() {
+      const health = await App.checkHealth();
       App.showLoading(true);
       const data = await Api.getAnalytics();
+      const recs = await Api.getRecommendations(I18n.lang);
       App.showLoading(false);
+      document.getElementById('engineBadge').innerHTML = App.engineBadge(recs.engine, health.last_error);
       renderKPIs(data.kpis);
       renderCharts(data);
       renderTables(data);
-      renderAI();
+      renderAI(recs, health);
     }
 
+    App.initConnectionBanner();
     document.addEventListener('langchange', load);
     load();
   </script>

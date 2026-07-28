@@ -1,30 +1,50 @@
 """Deterministic analytics engine — the code does the math, never the LLM.
 Computes KPIs, top sellers, trends, slow movers, stock risk and Product DNA scores
-from the store's DataFrames.
+from a session-scoped store's DataFrames.
 """
 from datetime import timedelta
 
 import numpy as np
 import pandas as pd
 
-from app.database.store import store
+
+_DEFAULT_SESSION = "anonymous"
 
 
-def _joined() -> pd.DataFrame:
-    """Sales joined with product cost/price info."""
+def _store(store=None):
+    """Return the passed store or the default anonymous demo store."""
+    if store is None:
+        from app.database.store import manager
+        store = manager.get(_DEFAULT_SESSION)
     store.ensure_loaded()
-    df = store.sales.merge(
-        store.products[["product_id", "product_name", "product_name_ar",
-                        "category", "category_ar", "unit_cost_egp"]],
-        on="product_id", how="left")
+    return store
+
+
+def _joined(store=None) -> pd.DataFrame:
+    """Sales joined with product cost/price info."""
+    store = _store(store)
+    wanted = ["product_id", "product_name", "product_name_ar",
+              "category", "category_ar", "unit_cost_egp"]
+    cols = [c for c in wanted if c in store.products.columns]
+    df = store.sales.merge(store.products[cols], on="product_id", how="left")
     df["revenue"] = df["quantity"] * df["unit_price_egp"] - df.get("discount_egp", 0)
     df["cost"] = df["quantity"] * df["unit_cost_egp"]
     df["profit"] = df["revenue"] - df["cost"]
     return df
 
 
-def compute_analytics() -> dict:
-    df = _joined()
+def _slow_mover_suggestion(margin_pct: float, days_no_sale: int, stock: int) -> str:
+    if days_no_sale >= 60 or (days_no_sale >= 30 and margin_pct < 15):
+        return "Liquidate — discount 20-30% or bundle to clear"
+    if days_no_sale >= 30:
+        return "Run a 10-15% discount campaign for 2 weeks; reassess"
+    if stock > 10 and margin_pct > 25:
+        return "Bundle with a fast-moving product to move stock"
+    return "Monitor for 2 more weeks; consider small discount if no change"
+
+def compute_analytics(store=None) -> dict:
+    store = _store(store)
+    df = _joined(store)
     today = df["date"].max()
     last_30 = df[df["date"] > today - timedelta(days=30)]
     prev_30 = df[(df["date"] <= today - timedelta(days=30)) &
@@ -77,15 +97,27 @@ def compute_analytics() -> dict:
     # slow movers — no sales in 30+ days (or lowest velocity), with capital tied
     last_sale = df.groupby("product_id")["date"].max()
     inv = store.inventory.merge(store.products, on="product_id")
+    total_days = max(1, (today - df["date"].min()).days)
+    # per-product profit over full history
+    prod_profit = df.groupby("product_id").agg(
+        total_profit=("profit", "sum")
+    )
     slow = []
     for r in inv.itertuples():
         ls = last_sale.get(r.product_id)
         days_no_sale = (today - ls).days if ls is not None else days
         if days_no_sale >= 14:
+            pp = prod_profit.loc[r.product_id, "total_profit"] if r.product_id in prod_profit.index else 0.0
+            avg_monthly_profit = abs(pp) / (total_days / 30.0) if total_days else 0.0
+            lost_profit = round((days_no_sale / 30.0) * avg_monthly_profit)
+            margin_pct = ((r.selling_price_egp - r.unit_cost_egp) / max(r.selling_price_egp, 1)) * 100
+            recovery = _slow_mover_suggestion(margin_pct, days_no_sale, r.current_stock)
             slow.append({
                 "name": r.product_name, "name_ar": r.product_name_ar,
                 "days_no_sale": int(days_no_sale), "stock": int(r.current_stock),
                 "tied_capital": round(float(r.current_stock * r.unit_cost_egp)),
+                "lost_profit_egp": lost_profit,
+                "recovery_suggestion": recovery,
             })
     slow_movers = sorted(slow, key=lambda x: -x["tied_capital"])[:5]
 
@@ -111,18 +143,21 @@ def compute_analytics() -> dict:
     }
 
 
-def product_list() -> list[dict]:
-    store.ensure_loaded()
+def product_list(store=None) -> list[dict]:
+    store = _store(store)
     return [{
-        "id": r.product_id, "name": r.product_name, "name_ar": r.product_name_ar,
-        "category": r.category, "category_ar": r.category_ar,
+        "id": r.product_id, "name": r.product_name,
+        "name_ar": getattr(r, "product_name_ar", r.product_name),
+        "category": r.category,
+        "category_ar": getattr(r, "category_ar", r.category),
         "price": float(r.selling_price_egp),
     } for r in store.products.itertuples()]
 
 
-def product_dna(product_id: str) -> dict | None:
+def product_dna(product_id: str, store=None) -> dict | None:
     """8-dimension fingerprint, all scores 0-100, computed deterministically."""
-    df = _joined()
+    store = _store(store)
+    df = _joined(store)
     today = df["date"].max()
     last_30 = df[df["date"] > today - timedelta(days=30)]
     prev_30 = df[(df["date"] <= today - timedelta(days=30)) &
@@ -178,9 +213,9 @@ def product_dna(product_id: str) -> dict | None:
     }
 
 
-def analytics_summary_for_llm() -> str:
+def analytics_summary_for_llm(store=None) -> str:
     """Compact text summary of the analytics — the grounding context for LLM calls."""
-    a = compute_analytics()
+    a = compute_analytics(store)
     lines = [
         f"Revenue (30d): {a['kpis']['revenue']} EGP ({a['kpis']['revenue_change']}% vs prior)",
         f"Profit (30d): {a['kpis']['profit']} EGP, Margin: {a['kpis']['margin']}%",

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History — ProductIQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/arabic.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .tab-bar { display: flex; gap: 4px; border-bottom: 2px solid var(--border-light); margin-bottom: 24px; }
+    .tab-btn { padding: 10px 20px; font-size: 0.875rem; font-weight: 600; border: none; background: none; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .entry-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+    .entry-card .meta { font-size: 0.75rem; color: var(--text-light); margin-bottom: 8px; display: flex; gap: 12px; align-items: center; }
+    .entry-card .content { font-size: 0.875rem; line-height: 1.65; color: var(--text-primary); }
+    .source-chip { display: inline-block; padding: 2px 8px; border-radius: 12px; background: var(--teal-light); font-size: 0.7rem; color: var(--teal); margin: 2px; }
+    .diff-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 8px; }
+    .diff-card .diff-key { font-weight: 600; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; }
+    .diff-card .diff-before { font-size: 0.8rem; color: var(--danger); text-decoration: line-through; }
+    .diff-card .diff-after { font-size: 0.8rem; color: var(--success); }
+    .snapshot-kpi { display: inline-flex; align-items: center; gap: 8px; background: var(--teal-light); padding: 4px 12px; border-radius: 16px; font-size: 0.8rem; margin: 2px; }
+    .product-select { min-width: 240px; }
+    .export-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius-sm); background: var(--teal-light); color: var(--teal); font-size: 0.8125rem; font-weight: 600; text-decoration: none; margin-bottom: 16px; }
+    .export-link:hover { background: var(--teal); color: white; }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <nav class="topbar">
+      <div class="brand">
+        <div class="logo-icon">PQ</div>
+        <div>
+          <span class="brand-name" data-i18n="app.name">ProductIQ</span>
+          <span class="brand-sub" data-i18n="app.tagline">AI Retail Decision Engine</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <button class="nav-item" data-page="home" data-href="index.html"><span class="nav-dot"></span><span data-i18n="nav.home">Home</span></button>
+        <button class="nav-item" data-page="upload" data-href="upload.html"><span class="nav-dot"></span><span data-i18n="nav.upload">Upload</span></button>
+        <button class="nav-item" data-page="dashboard" data-href="dashboard.html"><span class="nav-dot"></span><span data-i18n="nav.dashboard">Dashboard</span></button>
+        <button class="nav-item" data-page="dna" data-href="product-dna.html"><span class="nav-dot"></span><span data-i18n="nav.dna">Product DNA</span></button>
+        <button class="nav-item" data-page="report" data-href="ceo-report.html"><span class="nav-dot"></span><span data-i18n="nav.report">CEO Report</span></button>
+        <button class="nav-item" data-page="simulator" data-href="simulator.html"><span class="nav-dot"></span><span data-i18n="nav.simulator">Simulator</span></button>
+        <button class="nav-item" data-page="board" data-href="board-meeting.html"><span class="nav-dot"></span><span data-i18n="nav.board">Board Meeting</span></button>
+        <button class="nav-item" data-page="research" data-href="research.html"><span class="nav-dot"></span><span data-i18n="nav.research">Research</span></button>
+        <button class="nav-item active" data-page="history" data-href="history.html"><span class="nav-dot"></span><span data-i18n="nav.history">History</span></button>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="en" onclick="I18n.setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="ar" onclick="I18n.setLang('ar')">عربي</button>
+        </div>
+        <div id="userMenu" class="user-menu"></div>
+        <button class="hamburger" aria-label="Menu">☰</button>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="hamburger">☰</button>
+          <div>
+            <div class="header-title" data-i18n="history.title">Memory & History</div>
+            <div class="header-breadcrumb" data-i18n="history.subtitle">Persistent record of every research, board meeting, and analytics snapshot.</div>
+          </div>
+        </div>
+        <div class="header-right"></div>
+      </header>
+
+      <main class="page-content">
+        <a class="export-link" href="/api/memory/export" target="_blank">
+          <span data-i18n="history.export">Export memory.json</span>
+        </a>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="research"><span data-i18n="history.tab.research">Research History</span></button>
+          <button class="tab-btn" data-tab="findings"><span data-i18n="history.tab.findings">Product Findings</span></button>
+          <button class="tab-btn" data-tab="board"><span data-i18n="history.tab.board">Board Decisions</span></button>
+          <button class="tab-btn" data-tab="metrics"><span data-i18n="history.tab.metrics">Metrics Snapshots</span></button>
+        </div>
+
+        <!-- Research History -->
+        <div class="tab-panel active" id="panel-research">
+          <div style="margin-bottom:16px">
+            <input type="text" id="researchSessionFilter" placeholder="Session ID..." style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.875rem;width:200px">
+            <button class="btn btn-primary btn-sm" onclick="loadResearch()" style="margin-left:8px"><span data-i18n="btn.filter">Filter</span></button>
+          </div>
+          <div id="researchEntries"></div>
+        </div>
+
+        <!-- Product Findings -->
+        <div class="tab-panel" id="panel-findings">
+          <div style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <select id="findingsProductFilter" class="product-select">
+              <option value="">— <span data-i18n="history.allProducts">All products</span> —</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="loadFindings()"><span data-i18n="btn.filter">Filter</span></button>
+            <button class="btn btn-outline btn-sm" onclick="showDiff()"><span data-i18n="history.compare">Compare versions</span></button>
+          </div>
+          <div id="findingsEntries"></div>
+          <div id="diffPanel" style="display:none;margin-top:16px">
+            <h4 style="margin-bottom:12px"><span data-i18n="history.diff">Version Comparison</span></h4>
+            <div id="diffEntries"></div>
+          </div>
+        </div>
+
+        <!-- Board Decisions -->
+        <div class="tab-panel" id="panel-board">
+          <div style="margin-bottom:16px">
+            <input type="text" id="boardProductFilter" placeholder="Product name..." style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.875rem;width:200px">
+            <button class="btn btn-primary btn-sm" onclick="loadBoard()" style="margin-left:8px"><span data-i18n="btn.filter">Filter</span></button>
+          </div>
+          <div id="boardEntries"></div>
+        </div>
+
+        <!-- Metrics Snapshots -->
+        <div class="tab-panel" id="panel-metrics">
+          <div style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" onclick="loadMetrics()"><span data-i18n="history.refresh">Refresh</span></button>
+            <button class="btn btn-gold btn-sm" onclick="takeSnapshot()"><span data-i18n="history.snapshot">Take Snapshot</span></button>
+          </div>
+          <div id="metricsEntries"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    App.initNav('history');
+    App.initConnectionBanner();
+
+    const ar = () => I18n.lang === 'ar';
+
+    // ── Tabs ──
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ── Research History ──
+    async function loadResearch() {
+      const sid = document.getElementById('researchSessionFilter').value || null;
+      const params = new URLSearchParams();
+      if (sid) params.set('session_id', sid);
+      params.set('limit', '50');
+      const res = await Api.request('/api/memory/research-history?' + params.toString());
+      if (!res) return;
+      const wrap = document.getElementById('researchEntries');
+      if (!res.entries || res.entries.length === 0) {
+        wrap.innerHTML = `<div class="empty-state"><p>${I18n.t('history.empty')}</p></div>`;
+        return;
+      }
+      wrap.innerHTML = res.entries.map(e => {
+        const ts = new Date(e.created_at + 'Z').toLocaleString();
+        const sources = e.sources || [];
+        const chips = sources.map(s => `<span class="source-chip">${s.title || s.url || ''}</span>`).join('');
+        const content = e.role === 'user' ? e.content : (ar() && e.content_ar ? e.content_ar : e.content);
+        return `<div class="entry-card">
+          <div class="meta">
+            <span class="badge ${e.role === 'user' ? 'badge-info' : 'badge-success'}">${e.role}</span>
+            <span>${ts}</span>
+            <span class="badge">${e.engine}</span>
+            <span style="color:var(--text-light)">${e.session_id}</span>
+          </div>
+          <div class="content">${content}</div>
+          ${sources.length ? `<div style="margin-top:8px">${chips}</div>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    // ── Product Findings ──
+    async function loadFindings() {
+      const product = document.getElementById('findingsProductFilter').value || null;
+      const params = new URLSearchParams();
+      if (product) params.set('product', product);
+      params.set('limit', '50');
+      const res = await Api.request('/api/memory/product-findings?' + params.toString());
+      if (!res) return;
+      const wrap = document.getElementById('findingsEntries');
+      const diffPanel = document.getElementById('diffPanel');
+      diffPanel.style.display = 'none';
+      if (!res.entries || res.entries.length === 0) {
+        wrap.innerHTML = `<div class="empty-state"><p>${I18n.t('history.empty')}</p></div>`;
+        return;
+      }
+      wrap.innerHTML = res.entries.map(e => {
+        const ts = new Date(e.created_at + 'Z').toLocaleString();
+        const r = e.report || {};
+        const sources = r.sources || [];
+        const chips = sources.map(s => `<span class="source-chip">${s.title || s.url || ''}</span>`).join('');
+        const summary = ar() ? (r.summary_ar || r.summary_en) : r.summary_en;
+        return `<div class="entry-card">
+          <div class="meta">
+            <strong>${e.product}</strong>
+            <span>${ts}</span>
+            <span class="badge">${e.engine}</span>
+            ${r.confidence !== undefined ? `<span>${I18n.t('common.confidence')}: ${r.confidence}%</span>` : ''}
+          </div>
+          <div class="content">${summary || ''}</div>
+          ${r.recommended_action ? `<div style="margin-top:8px;font-size:0.8rem;color:var(--teal);font-weight:600">→ ${r.recommended_action}</div>` : ''}
+          ${sources.length ? `<div style="margin-top:6px">${chips}</div>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    async function showDiff() {
+      const product = document.getElementById('findingsProductFilter').value;
+      if (!product) { alert('Select a product first'); return; }
+      const res = await Api.request('/api/memory/diff/' + encodeURIComponent(product));
+      if (!res || !res.history) return;
+      const panel = document.getElementById('diffPanel');
+      panel.style.display = 'block';
+      const wrap = document.getElementById('diffEntries');
+      wrap.innerHTML = res.history.map(h => {
+        const ts = new Date(h.created_at + 'Z').toLocaleString();
+        let diffHtml = '';
+        if (h.diff_summary && typeof h.diff_summary === 'object') {
+          diffHtml = Object.entries(h.diff_summary).map(([key, val]) => {
+            if (typeof val === 'object' && val.before !== undefined) {
+              return `<div class="diff-card">
+                <div class="diff-key">${key}</div>
+                <div class="diff-before">${val.before}</div>
+                <div class="diff-after">${val.after}</div>
+              </div>`;
+            }
+            return `<div class="diff-card"><div class="diff-key">${key}</div><span>${JSON.stringify(val)}</span></div>`;
+          }).join('');
+        } else {
+          diffHtml = `<div class="diff-card" style="color:var(--text-secondary);font-size:0.85rem">${h.diff_summary || ''}</div>`;
+        }
+        return `<div class="entry-card">
+          <div class="meta"><strong>${ts}</strong><span class="badge">${h.engine}</span></div>
+          ${diffHtml}
+        </div>`;
+      }).join('');
+    }
+
+    // ── Board Decisions ──
+    async function loadBoard() {
+      const product = document.getElementById('boardProductFilter').value || null;
+      const params = new URLSearchParams();
+      if (product) params.set('product_name', product);
+      params.set('limit', '30');
+      const res = await Api.request('/api/memory/board-decisions?' + params.toString());
+      if (!res) return;
+      const wrap = document.getElementById('boardEntries');
+      if (!res.entries || res.entries.length === 0) {
+        wrap.innerHTML = `<div class="empty-state"><p>${I18n.t('history.empty')}</p></div>`;
+        return;
+      }
+      wrap.innerHTML = res.entries.map(e => {
+        const ts = new Date(e.created_at + 'Z').toLocaleString();
+        const transcript = e.transcript || [];
+        const roles = transcript.map(t => t.role_en).join(' → ');
+        const verdict = typeof e.verdict === 'string' ? e.verdict.slice(0, 200) : '';
+        return `<div class="entry-card">
+          <div class="meta">
+            <strong>${e.product_name}</strong>
+            <span>${ts}</span>
+            <span class="badge">${e.engine}</span>
+          </div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:6px">${roles}</div>
+          ${verdict ? `<div class="content">${verdict}...</div>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    // ── Metrics Snapshots ──
+    async function loadMetrics() {
+      const res = await Api.request('/api/memory/metrics-snapshots?limit=30');
+      if (!res) return;
+      const wrap = document.getElementById('metricsEntries');
+      if (!res.entries || res.entries.length === 0) {
+        wrap.innerHTML = `<div class="empty-state"><p>${I18n.t('history.empty')}</p></div>`;
+        return;
+      }
+      wrap.innerHTML = res.entries.map(e => {
+        const ts = new Date(e.created_at + 'Z').toLocaleString();
+        const s = e.snapshot || {};
+        const k = s.kpis || {};
+        return `<div class="entry-card">
+          <div class="meta">
+            <span>${ts}</span>
+            <span class="badge">${e.label || 'auto'}</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="snapshot-kpi">${I18n.t('dashboard.kpi.revenue')}: ${App.egp(k.revenue)}</span>
+            <span class="snapshot-kpi">${I18n.t('dashboard.kpi.profit')}: ${App.egp(k.profit)}</span>
+            <span class="snapshot-kpi">${I18n.t('dashboard.kpi.margin')}: ${k.margin}%</span>
+            <span class="snapshot-kpi">${I18n.t('dashboard.kpi.turnover')}: ${k.turnover}x</span>
+          </div>
+          ${k.revenue_change !== undefined ? `<div style="font-size:0.75rem;color:var(--text-light);margin-top:6px">Rev change: ${k.revenue_change >= 0 ? '+' : ''}${k.revenue_change}% | Profit change: ${k.profit_change >= 0 ? '+' : ''}${k.profit_change}%</div>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    async function takeSnapshot() {
+      App.showLoading(true);
+      const res = await Api.request('/api/memory/snapshot', { method: 'POST' });
+      App.showLoading(false);
+      if (res && res.ok) loadMetrics();
+    }
+
+    // ── Populate product filter ──
+    async function initProductFilter() {
+      const products = await Api.getProductList();
+      if (!products) return;
+      const sel = document.getElementById('findingsProductFilter');
+      products.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.name;
+        opt.textContent = ar() && p.name_ar ? p.name_ar : p.name;
+        sel.appendChild(opt);
+      });
+    }
+
+    // ── Init ──
+    loadResearch();
+    loadFindings();
+    loadBoard();
+    loadMetrics();
+    initProductFilter();
+
+    document.addEventListener('langchange', () => {
+      loadResearch();
+      loadFindings();
+      loadBoard();
+      loadMetrics();
+    });
+  </script>
+</body>
+</html>

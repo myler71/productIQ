@@ -9,24 +9,24 @@
   .dna-comparison { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-100%);
-    width: 280px;
-  }
-  body[dir="rtl"] .sidebar { transform: translateX(100%); }
-  .sidebar.open { transform: translateX(0); }
-  .sidebar-overlay {
+@media (max-width: 860px) {
+  /* Topbar → hamburger mode */
+  .topbar { flex-wrap: wrap; height: auto; padding-block: 10px; }
+  .topbar .nav-links {
     display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 99;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    order: 3;
+    margin-top: 10px;
+    margin-inline-start: 0;
   }
-  .sidebar-overlay.show { display: block; }
-  .main-content { margin-left: 0; }
-  body[dir="rtl"] .main-content { margin-right: 0; }
-  .hamburger { display: flex !important; }
+  .topbar .nav-links.open { display: flex; }
+  .topbar .nav-item { width: 100%; justify-content: flex-start; padding: 12px 14px; }
+  .topbar .hamburger { display: block; }
+  .topbar .topbar-right { margin-inline-start: auto; border-inline-start: none; padding-inline-start: 0; }
+
   .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .page-content { padding: 20px 16px; }
   .top-header { padding: 0 16px; }
@@ -45,15 +45,5 @@
   .simulator-input .param-row .param-field { min-width: 100%; }
   .report-actions { flex-direction: column; }
   .report-actions .btn { width: 100%; }
-}
-
-.hamburger {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--text-primary);
-  padding: 4px;
-  line-height: 1;
+  .topbar .brand .brand-sub { display: none; }
 }
