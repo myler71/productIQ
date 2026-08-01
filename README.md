@@ -1,80 +1,57 @@
-# ProductIQ — AI Retail Decision Engine
+# 🚀 [ProductIQ — AI Retail Decision Engine](https://www.tipshindawi.com/)
 
-> Turn your store data into business decisions. Built for the Egyptian market — bilingual (Arabic/English), EGP-native.
+> 🏆 This repository is my official submission for the [**Tips Hindawi**](https://www.tipshindawi.com/) **Challenge (June–July) 2026**.
 
-ProductIQ is an AI decision-support platform for Egyptian retailers. Upload sales + inventory CSVs → get deterministic analytics, AI recommendations (Arabic/English), Product DNA profiles, a weekly CEO report, a what-if decision simulator, an AI board meeting, and a conversational market research agent.
+## 👤 Participant
 
-**Core principle:** the code does the math, the LLM does the reasoning. Deterministic Pandas analytics compute the numbers; LangChain + Groq turn them into plain-language decisions.
-
----
-
-## The 7 Engines
-
-| Engine | What it does | How |
-|---|---|---|
-| **Core Analytics** | Top sellers, slow movers, dead stock, turnover, margins, stock risk | Pandas (deterministic) |
-| **AI Recommendations** | Restock / discount / bundle / remove, with reasoning + confidence, AR + EN | LangChain + Groq |
-| **Product DNA** | 8-dimension visual fingerprint + health score, side-by-side compare | Deterministic scoring → Chart.js radar |
-| **Weekly CEO Report** | Executive summary, revenue, action items, supplier alerts — printable | LLM-generated, bilingual |
-| **What-If Simulator** | Price/discount scenarios → demand, revenue, profit, risk + stated assumptions | LLM with honest-assumption JSON |
-| **AI Board Meeting** | CFO, Marketing, Inventory & CEO agents debate a product, CEO delivers the final verdict | Multi-agent sequential LLM chain |
-| **Market Research** | Conversational agent that plans, searches (Tavily MCP), extracts facts, and generates bilingual reports with citations | MCP client + LLM pipeline |
-
-All AI features degrade gracefully to deterministic rule-based output if the LLM is offline — **the demo never breaks**.
+| Field            | Value                                      |
+| ---------------- | ------------------------------------------ |
+| Full Name        | Marwan Ammar                               |
+| Project Name     | ProductIQ — AI Retail Decision Engine      |
+| GitHub Username  | [myler71](https://github.com/myler71)      |
+| Challenge Batch  | June–July 2026                             |
+| Training Program | Large Language Models (LLMs) Program       |
+| Organization     | [**Edrak for Ai**](https://edrak4ai.com/en) |
 
 ---
 
-## Architecture
+# 📖 Project Overview
 
-```
-ProductIQ/
-├── frontend/                  # Vanilla HTML/CSS/JS — no build step
-│   ├── index.html             # Landing page
-│   ├── login.html             # Optional user auth
-│   ├── upload.html            # CSV upload + validation
-│   ├── dashboard.html         # Analytics + AI recommendations
-│   ├── product-dna.html       # DNA radar + comparison
-│   ├── ceo-report.html        # Weekly executive report (printable)
-│   ├── simulator.html         # What-if simulator
-│   ├── board-meeting.html     # AI Board Meeting (multi-agent)
-│   ├── research.html          # Conversational market research
-│   ├── history.html           # Persistent memory (research, board decisions, snapshots)
-│   ├── css/                   # Design system, layout, components, RTL, responsive
-│   ├── js/                    # i18n (AR/EN), charts, API client (mock fallback), utils
-│   └── assets/sample-data/    # Egyptian sample CSVs
-├── backend/
-│   ├── app/
-│   │   ├── main.py            # FastAPI entry + static frontend serving
-│   │   ├── api/
-│   │   │   ├── routes.py      # /api/* endpoints
-│   │   │   └── auth.py        # Login/logout/session (signed cookies)
-│   │   ├── core/config.py     # .env config
-│   │   ├── database/
-│   │   │   ├── store.py       # In-memory DataFrame store + CSV validation
-│   │   │   ├── schemas.py     # Pydantic models for requests/responses
-│   │   │   └── users.py       # User credentials (bcrypt + argon2)
-│   │   └── services/
-│   │       ├── analysis/
-│   │       │   ├── engine.py      # Deterministic Pandas analytics + DNA scoring
-│   │       │   └── simulation.py  # What-if simulation logic
-│   │       ├── ai/                # LLM service, chains, crew (board meeting)
-│   │       ├── memory/            # SQLite-backed persistent memory store
-│   │       └── research/          # MCP client + conversational research agent
-│   ├── requirements.txt
-│   └── .env.example
-├── datasets/                  # Sample data generator + CSVs
-├── notebooks/
-│   ├── ProductIQ_AI_Operations.ipynb   # LangChain · RAG · CrewAI · What-If
-│   └── ProductIQ_AI_Complete.ipynb     # Full pipeline demo
-├── tests/                     # Pytest suite (auth, analytics, routes, LLM, memory, etc.)
-├── .github/workflows/ci.yml   # CI pipeline
-├── Dockerfile                 # Multi-stage Docker build
-└── conftest.py                # Shared test fixtures
-```
+**ProductIQ** is an AI decision-support platform built for Egyptian retailers. It turns store data into business decisions: upload sales + inventory CSVs and get deterministic analytics, AI recommendations (Arabic/English), Product DNA profiles, a weekly CEO report, a what-if decision simulator, an AI board meeting, and a conversational market research agent.
+
+**Core principle:** *the code does the math, the LLM does the reasoning.* Deterministic Pandas analytics compute the numbers; LangChain + Groq turn them into plain-language decisions — and every AI feature degrades gracefully to rule-based output if the LLM is offline, so the demo never breaks.
 
 ---
 
-## Quick Start
+# ✨ Features
+
+* **Core Analytics** — top sellers, slow movers, dead stock, turnover, margins, and stock risk computed deterministically with Pandas
+* **AI Recommendations** — restock / discount / bundle / remove suggestions with reasoning and confidence, in **English and Arabic**
+* **Product DNA** — 8-dimension visual fingerprint with health score and side-by-side product comparison (Chart.js radar)
+* **Weekly CEO Report** — LLM-generated executive summary, revenue, action items, and supplier alerts — bilingual and printable
+* **What-If Simulator** — price/discount scenarios → demand, revenue, profit, and risk with honest stated assumptions
+* **AI Board Meeting** — CFO, Marketing, Inventory, and CEO agents debate a product, with the CEO delivering the final verdict
+* **Market Research** — conversational agent that plans, searches (Tavily MCP), extracts facts, and generates cited bilingual reports
+* **Persistent Memory** — SQLite-backed store for research history, board decisions, and analytics snapshots with diff comparison
+* **Bilingual RTL UI** — full Arabic/English interface (Cairo + Inter), EGP-native, tailored to the Egyptian market
+
+---
+
+# 🛠️ Technologies Used
+
+* **Backend:** Python 3.11 · FastAPI · Uvicorn · Pydantic
+* **AI/LLM:** LangChain · LangChain-Groq · CrewAI-style multi-agent chains · MCP (Tavily)
+* **Data:** Pandas · NumPy · SQLite (persistent memory)
+* **Frontend:** Vanilla HTML/CSS/JS (no build step) · Chart.js · i18n (AR/EN, full RTL)
+* **Security:** bcrypt · argon2 · signed session cookies (itsdangerous)
+* **Testing & CI:** Pytest · GitHub Actions (CI pipeline)
+* **Deployment:** Docker (multi-stage build) · Render-ready static + API
+
+---
+
+# ⚙️ Installation
+
+**Prerequisites:** Python 3.11+, Node.js 20+ (for the Tavily MCP research agent), and a Groq/Tavily API key (optional).
 
 ### 1. Backend
 
@@ -84,11 +61,9 @@ pip install -r requirements.txt
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-Then open **http://127.0.0.1:8000** — the backend serves the frontend.
+Then open **http://127.0.0.1:8000** — the backend serves the frontend. API docs: **http://127.0.0.1:8000/docs**
 
-API docs: **http://127.0.0.1:8000/docs**
-
-### 2. LLM keys
+### 2. LLM keys (optional)
 
 Copy `backend/.env.example` → `backend/.env` and add your keys:
 
@@ -109,11 +84,11 @@ docker run -p 8000:8000 productiq
 
 ### 4. Frontend only (no backend)
 
-Open any file in `frontend/` directly in a browser — the UI falls back to built-in mock data automatically. Perfect for a quick design demo.
+Open any file in `frontend/` directly in a browser — the UI falls back to built-in mock data automatically.
 
 ### 5. Sample data
 
-The Egyptian electronics-shop dataset (10 products, ~330 sales over 4 months, 5 suppliers) is pre-generated in `datasets/` and `frontend/assets/sample-data/`. Regenerate:
+The Egyptian electronics-shop dataset (10 products, ~330 sales over 4 months, 5 suppliers) is pre-generated. Regenerate it with:
 
 ```powershell
 python datasets/generate_sample_data.py
@@ -127,78 +102,89 @@ cd backend && python -m pytest
 
 ---
 
-## API Reference
+# 🚀 Usage
 
-### Core
+1. **Upload your data** on the `upload.html` page — sales, inventory, suppliers, and pricing CSVs (or click *Load Sample Data* to use the bundled Egyptian dataset).
+2. **Review analytics** on the dashboard — KPIs, trends, slow movers, and stock risk.
+3. **Get AI recommendations** in English or Arabic for restocking, discounts, bundles, and removals.
+4. **Explore Product DNA** for any product to see its 8-dimension health fingerprint and compare products side-by-side.
+5. **Run what-if simulations** — change price or discount and see predicted demand, revenue, and profit.
+6. **Hold an AI board meeting** — let the CFO, Marketing, Inventory, and CEO agents debate a product.
+7. **Ask the market research agent** any question and receive a cited bilingual report.
 
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/health` | GET | Service + data source status |
-| `/api/load-sample` | POST | Load bundled Egyptian dataset |
-| `/api/upload` | POST | Upload CSV files (multipart) |
-| `/api/analytics` | GET | KPIs, top sellers, trends, slow movers, stock risk |
-| `/api/recommendations?lang=` | GET | AI recommendations (`en`/`ar`) |
-| `/api/products` | GET | Product list |
-| `/api/product-dna/{id}` | GET | 8-dimension DNA + health score |
-| `/api/ceo-report?lang=` | POST | Weekly executive report |
-| `/api/simulate` | POST | What-if simulation |
-| `/api/board-meeting` | POST | 4-agent board meeting on a product |
-
-### Auth
-
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/auth/login` | POST | Login (returns signed cookie) |
-| `/api/auth/logout` | POST | Clear session |
-| `/api/auth/me` | GET | Check auth status |
-
-### Market Research
-
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/research/status` | GET | MCP/Tavily connection status |
-| `/api/research/chat` | POST | Send a message to the research agent |
-| `/api/research/history` | GET | Conversation history |
-| `/api/research/report` | POST | Generate structured bilingual report from findings |
-
-### Memory
-
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/memory/research-history` | GET | Past research conversations |
-| `/api/memory/product-findings` | GET | Structured research reports per product |
-| `/api/memory/board-decisions` | GET | Past board meeting verdicts |
-| `/api/memory/metrics-snapshots` | GET | Analytics snapshots for trend comparison |
-| `/api/memory/diff/{product}` | GET | Compare current analytics vs last snapshot |
-| `/api/memory/snapshot` | POST | Save current analytics as a snapshot |
-| `/api/memory/export` | GET | Download memory as JSON |
+**Default admin login** (change it in `.env`): `admin` / `admin123`
 
 ---
 
-## The AI Notebooks
+# 📸 Demo
 
-- `notebooks/ProductIQ_AI_Operations.ipynb` — LangChain, RAG (FAISS), CrewAI board meeting, What-If
-- `notebooks/ProductIQ_AI_Complete.ipynb` — Full pipeline with all v2 features
+### 🏠 Landing Page
+
+![Landing Page](assets/screenshots/landing.png)
+
+### ✨ Overall Features
+
+![Overall Features](assets/screenshots/features.png)
+
+### 📊 Dashboard & Analytics
+
+![Dashboard & Analytics](assets/screenshots/dashboard.png)
+
+### 🧬 Product DNA
+
+![Product DNA](assets/screenshots/product-dna.png)
+
+### 📋 Weekly CEO Report
+
+![Weekly CEO Report](assets/screenshots/ceo-report.png)
+
+### 🎯 What-If Simulator
+
+![What-If Simulator](assets/screenshots/simulator.png)
+
+### 🔍 Market Research
+
+![Market Research](assets/screenshots/research.png)
 
 ---
 
-## Design System
+**Quick demo:** run the backend and open `http://127.0.0.1:8000` — the dashboard loads with sample data instantly. You can also open the frontend HTML files directly in any browser for a design demo with mock data.
 
-- **Colors:** Deep navy `#0B1F3A` · Teal `#00A6A6` · Gold `#D4A537`
-- **Fonts:** Inter (EN) + Cairo (AR) — full RTL layout mirroring
-- **Charts:** Chart.js (bar / line / doughnut / radar)
-- **No framework, no build step** — open and run
+**Presentation:** see the `presentations/` folder for slide decks.
 
 ---
 
-## "Why not just ChatGPT + a spreadsheet?"
+# 📈 Results
 
-ProductIQ is not a chatbot. It's a domain decision engine: deterministic retail math (turnover, reorder points, tied capital) computed reliably in code, multi-file joins (sales + inventory + suppliers + pricing) done cleanly every time, a persistent bilingual interface, AI that states its assumptions and confidence, and a research agent that cites every external source — none of which ad-hoc ChatGPT use provides.
+* **7 decision engines** delivered end-to-end (analytics, AI recommendations, Product DNA, CEO report, simulator, board meeting, market research)
+* **Full bilingual (Arabic/English) RTL experience** tailored to Egyptian retailers
+* **Graceful degradation** — every AI feature falls back to deterministic rules when the LLM is offline
+* **12 test modules** covering auth, analytics, routes, LLM chains, memory, and MCP client, with a **GitHub Actions CI pipeline** running tests + server smoke check
+* **Dockerized** deployment with a multi-stage build
 
 ---
 
-## Notes
+# 🔮 Future Improvements
 
-- `.env` is git-ignored. Never commit API keys.
-- The frontend works standalone (mock fallback) — the backend makes it real.
-- Run tests: `cd backend && python -m pytest`
+* Add real-time inventory sync from ERP/pos systems (Odoo, Shopify, Zoho)
+* Integrate more LLM providers (OpenAI, Google, NVIDIA) with automatic routing/fallback
+* Add forecasting models (Prophet / ARIMA) for demand prediction
+* Expand the research agent with more MCP servers (news, suppliers, competitors)
+* Build a React/Nuxt frontend with charts, notifications, and role-based dashboards
+* Deploy to AWS SageMaker / EC2 for scalable inference
+
+---
+
+# 📚 About the Challenge
+
+This project was developed as part of the [**Tips Hindawi**](https://www.tipshindawi.com/) **Challenge (June–July) 2026**.
+
+[Tips Hindawi](https://www.tipshindawi.com/) is the internships department of [**Edrak for Ai**](https://edrak4ai.com/en), and the challenge encourages participants to build real-world projects, apply practical skills, and showcase their work through GitHub.
+
+For more information about the challenge, training programs, and upcoming batches, visit the official [Tips Hindawi](https://www.tipshindawi.com/) website.
+
+---
+
+# 📄 License
+
+This project is shared for educational and portfolio purposes. © 2026 Marwan Ammar (myler71). Free to use, learn from, and adapt for non-commercial purposes.
